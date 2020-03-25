@@ -1,0 +1,21 @@
+{
+    "name": "Ulm@home",
+    "short_name": "Ulm@home",
+    "description": "Ulm@home",
+    "icons": [
+        {
+            "src": "https://cdn.glitch.com/fd96e08d-f7c4-4288-9bf3-2753e6b1b12e%2Ficon-192x192.png?v=1585075636234",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "https://cdn.glitch.com/fd96e08d-f7c4-4288-9bf3-2753e6b1b12e%2Ficon-512x512.png?v=1585075636247",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ],
+    "start_url": "/",
+    "display": "standalone",
+    "theme_color": "#d84727",
+    "background_color": "#d84727"
+}

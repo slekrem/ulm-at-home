@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="generator" content="PWA maker">
+    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+
+    <title>ulm-app</title>
+    <meta name="description" content="ULM@home">
+
+    <base href="/">
+    <link rel="icon" href="https://cdn.glitch.com/fd96e08d-f7c4-4288-9bf3-2753e6b1b12e%2Ffavicon.ico?v=1585075947159">
+    <link rel="manifest" href="manifest.json">
+
+    <meta name="theme-color" content="#d84727">
+
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="application-name" content="Ulm@home">
+
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Ulm@home">
+
+    <link rel="apple-touch-icon" href="https://cdn.glitch.com/fd96e08d-f7c4-4288-9bf3-2753e6b1b12e%2Ficon-48x48.png?v=1585075636352">
+    <link rel="apple-touch-icon" sizes="72x72" href="https://cdn.glitch.com/fd96e08d-f7c4-4288-9bf3-2753e6b1b12e%2Ficon-72x72.png?v=1585075636362">
+    <link rel="apple-touch-icon" sizes="96x96" href="https://cdn.glitch.com/fd96e08d-f7c4-4288-9bf3-2753e6b1b12e%2Ficon-96x96.png?v=1585075636482">
+    <link rel="apple-touch-icon" sizes="144x144" href="https://cdn.glitch.com/fd96e08d-f7c4-4288-9bf3-2753e6b1b12e%2Ficon-144x144.png?v=1585075636075">
+    <link rel="apple-touch-icon" sizes="192x192" href="https://cdn.glitch.com/fd96e08d-f7c4-4288-9bf3-2753e6b1b12e%2Ficon-192x192.png?v=1585075636234">
+
+    <meta name="msapplication-TileImage" content="https://cdn.glitch.com/fd96e08d-f7c4-4288-9bf3-2753e6b1b12e%2Ficon-144x144.png?v=1585075636075">
+    <meta name="msapplication-TileColor" content="#d84727">
+    <meta name="msapplication-tap-highlight" content="no">
+
+    <script>
+        window.process = { env: { NODE_ENV: 'production' } };
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function () {
+                navigator.serviceWorker.register('service-worker.js', {
+                    scope: '/'
+                });
+            });
+        }
+    </script>
+    <script src="node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
+    <script type="module" src="src/ulm-app.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/onsenui/css/onsenui.css">
+    <link rel="stylesheet" href="https://unpkg.com/onsenui/css/onsen-css-components.min.css">
+    <script src="https://unpkg.com/onsenui/js/onsenui.min.js"></script>
+</head>
+
+<body>
+    <ulm-app></ulm-app>
+    <noscript>
+        Please enable JavaScript to view this website.
+    </noscript>
+</body>
+
+</html>
