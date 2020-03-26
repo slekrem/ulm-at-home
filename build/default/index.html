@@ -1344,33 +1344,35 @@ if(this._needsShimAdoptedStyleSheets){this._needsShimAdoptedStyleSheets=!1;this.
         ${renderLieferdienstePage()}
         ${renderKulturPage()}
         ${renderInfosPage()}
-        `}}customElements.define(KategorienPage.is,KategorienPage);class FreizeitPage extends connect(store)(LitElement){static get is(){return"freizeit-page"}static get properties(){return{_freizeitOnsListData:[]}}constructor(){super();this._freizeitOnsListData=[]}_renderOnsListItem(item){return html`
-            <ons-list-item modifier="chevron" tappable @click="${this._onOnsListItemClick}">
+        `}}customElements.define(KategorienPage.is,KategorienPage);const SET_FREIZEIT_ITEM="SET_FREIZEIT_ITEM",setFreizeitItem=payload=>dispatch=>dispatch({type:SET_FREIZEIT_ITEM,payload:payload});class FreizeitPage extends connect(store)(LitElement){static get is(){return"freizeit-page"}static get properties(){return{_freizeitOnsListData:[]}}constructor(){super();this._freizeitOnsListData=[]}_renderOnsListItem(item){return html`
+            <ons-list-item modifier="chevron" tappable @click="${()=>this._onOnsListItemClick(item)}">
                 <div class="left">
                     <img class="list-item__thumbnail" src="${item.thumbnail}">
                 </div>
-                    <div class="center">
-                        <span class="list-item__title">${item.title}</span>
-                        <span class="list-item__subtitle">${item.subtitle}</span>
-                    </div>
-                </ons-list-item>
-                `}createRenderRoot(){return this}render(){return html`
+                <div class="center">
+                    <span class="list-item__title">${item.title}</span>
+                    <span class="list-item__subtitle">${item.subtitle}</span>
+                </div>
+            </ons-list-item>
+            `}createRenderRoot(){return this}render(){return html`
         <ons-page>
             <div class="content">
-                <h1>Freizeit@home</h1>
-                <p>
-                    Der Aufenthalt zu Hause bietet viele kreative und nützliche Möglichkeiten, um seine Freizeit abwechslungsreich, sinnvoll und bunt zu gestalten. 
-                    In dieser Kategorie sammeln wir Ideen, Inspirationen und Vorschläge gegen die Langeweile daheim. 
-                    Hobbys jeglicher Art sollen hier Platz finden. Communities, Workshops oder zum Beispiel auch Online-Treffen, zum gemeinsamen Yoga, findest du unter diesem Bereich.
-                    Für eine Teilnahme, Links oder Ideen sende eine email an (LINK)
-                </p>
+                <ons-card class="ul">
+                    <h1>Freizeit@home</h1>
+                    <p>
+                        Der Aufenthalt zu Hause bietet viele kreative und nützliche Möglichkeiten, um seine Freizeit abwechslungsreich, sinnvoll und bunt zu gestalten. 
+                        In dieser Kategorie sammeln wir Ideen, Inspirationen und Vorschläge gegen die Langeweile daheim. 
+                        Hobbys jeglicher Art sollen hier Platz finden. Communities, Workshops oder zum Beispiel auch Online-Treffen, zum gemeinsamen Yoga, findest du unter diesem Bereich.
+                        Für eine Teilnahme, Links oder Ideen sende eine email an (LINK)
+                    </p>
+                </ons-card>
                 <ons-list-title>Titel</ons-list-title>
                 <ons-list>
                     ${this._freizeitOnsListData.map(item=>this._renderOnsListItem(item))}
                 </ons-list>
             </div>
         </ons-page>
-        `}stateChanged(state){this._freizeitOnsListData=state.app.freizeitOnsListData}_onOnsListItemClick(){document.querySelector("ons-navigator").pushPage("detail-1-page.html")}}customElements.define(FreizeitPage.is,FreizeitPage);class LieferdienstePage extends connect(store)(LitElement){static get is(){return"lieferdienste-page"}static get properties(){return{_lieferdiensteOnsListData:[]}}constructor(){super();this._lieferdiensteOnsListData=[]}_renderOnsListItem(item){return html`
+        `}stateChanged(state){this._freizeitOnsListData=state.app.freizeitOnsListData}_onOnsListItemClick(item){store.dispatch(setFreizeitItem(item));document.querySelector("ons-navigator").pushPage("detail-1-page.html")}}customElements.define(FreizeitPage.is,FreizeitPage);class LieferdienstePage extends connect(store)(LitElement){static get is(){return"lieferdienste-page"}static get properties(){return{_lieferdiensteOnsListData:[]}}constructor(){super();this._lieferdiensteOnsListData=[]}_renderOnsListItem(item){return html`
             <ons-list-item modifier="chevron" tappable @click="${this._onOnsListItemClick}">
                 <div class="left">
                     <img class="list-item__thumbnail" src="${item.thumbnail}">
@@ -1611,51 +1613,38 @@ if(this._needsShimAdoptedStyleSheets){this._needsShimAdoptedStyleSheets=!1;this.
                 </ons-list>
             </div>
         </ons-page>
-        `}_onOnsListItemClick(){document.querySelector("ons-navigator").pushPage("detail-1-page.html")}}customElements.define(InfosPage.is,InfosPage);class Detail1Page extends connect(store)(LitElement){static get is(){return"detail-1-page"}static get properties(){return{}}constructor(){super()}createRenderRoot(){return this}render(){return html`
+        `}_onOnsListItemClick(){document.querySelector("ons-navigator").pushPage("detail-1-page.html")}}customElements.define(InfosPage.is,InfosPage);class Detail1Page extends connect(store)(LitElement){static get is(){return"detail-1-page"}static get properties(){return{_item:Object}}constructor(){super();this._item={}}_renderInformationenOnsListItem(item){return html`
+            <ons-list-item>
+                <div class="left">Source Code</div>
+                    <div class="center">
+                        <span class="list-item__title"></span>
+                        <span class="list-item__subtitle"></span>
+                    </div>
+                    <div class="right">
+                        <a href="https://github.com/slekrem/ulm-at-home" target="blank">github.com</a>
+                    </div>
+                </ons-list-item>
+                `}createRenderRoot(){return this}render(){return html`
         <ons-page>
             <ons-toolbar>
                 <div class="left">
                     <ons-back-button>Zurück</ons-back-button>
                 </div>
-                <div class="center">TITEL</div>
+                <div class="center">${this._item.title}</div>
             </ons-toolbar>
             <div class="content">
-                <img src="https://via.placeholder.com/800x600" style="width:100%">
-                <h1>Titel</h1>
-                <p>
-                    Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. 
-                    At vero eos et accusam et justo duo dolores et ea rebum. 
-                    Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. 
-                    Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. 
-                    At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
-                </p>
-                <ons-list-title>subtitel</ons-list-title>
+                <img src="${this._item.titleImage}" style="width:100%">
+                <ons-card class="ul">
+                    <h1>${this._item.subtitle}</h1>
+                    <p>${this._item.beschreibung}</p>
+                </ons-card>
+                <ons-list-title>Informationen</ons-list-title>
                 <ons-list>
-                    <ons-list-item>simple content</ons-list-item>
-                    <ons-list-item>
-                        <div class="left">left content</div>
-                    </ons-list-item>
-                    <ons-list-item>
-                        <div class="left">left content</div>
-                        <div class="center">center content</div>
-                    </ons-list-item>
-                    <ons-list-item>
-                        <div class="left">left content</div>
-                        <div class="center">center content</div>
-                        <div class="right">right content</div>
-                    </ons-list-item>
-                    <ons-list-item>
-                        <div class="left">left content</div>
-                        <div class="center">
-                            <span class="list-item__title">title</span>
-                            <span class="list-item__subtitle">subtitle</span>
-                        </div>
-                        <div class="right">right content</div>
-                    </ons-list-item>
+                    ${this._item.informationen.map(item=>this._renderInformationenOnsListItem(item))}
                 </ons-list>
             </div>
         </ons-page>
-        `}}customElements.define(Detail1Page.is,Detail1Page);const renderKategorienPage=()=>html`
+        `}stateChanged(state){this._item=state.app.freizeitItem}}customElements.define(Detail1Page.is,Detail1Page);const renderKategorienPage=()=>html`
 <template id="kategorien-page.html">
     <ons-page>
         <kategorien-page></kategorien-page>
@@ -1691,7 +1680,7 @@ if(this._needsShimAdoptedStyleSheets){this._needsShimAdoptedStyleSheets=!1;this.
         <detail-1-page></detail-1-page>
     </ons-page>
 </template>
-`,INITIAL_STATE={lieferdiensteOnsListData:[{thumbnail:"https://via.placeholder.com/40x40",title:"Pinocchio Pizzawerkstatt",subtitle:""},{thumbnail:"https://via.placeholder.com/40x40",title:"ulm-isst.de/",subtitle:""},{thumbnail:"https://via.placeholder.com/40x40",title:"Hungry Turtle",subtitle:""},{thumbnail:"https://via.placeholder.com/40x40",title:"Triple Lieferservice",subtitle:""},{thumbnail:"https://via.placeholder.com/40x40",title:"Eismann",subtitle:""},{thumbnail:"https://via.placeholder.com/40x40",title:"Vorgl\xFChbar Ulm",subtitle:""},{thumbnail:"https://via.placeholder.com/40x40",title:"Mudita Bar",subtitle:""},{thumbnail:"https://via.placeholder.com/40x40",title:"Buddha Kitchen",subtitle:""},{thumbnail:"https://via.placeholder.com/40x40",title:"Ahi\xB4s Pizza",subtitle:""},{thumbnail:"https://via.placeholder.com/40x40",title:"Hemperium",subtitle:""},{thumbnail:"https://via.placeholder.com/40x40",title:"Burger Brothers Ulm",subtitle:""}],freizeitOnsListData:[{thumbnail:"https://cdn.glitch.com/fd96e08d-f7c4-4288-9bf3-2753e6b1b12e%2Ficon-48x48.png?v=1585075636352",title:"ULM@home",subtitle:"Wir bauen ULM@home"}]},app=(state=INITIAL_STATE,action)=>{switch(action.type){default:return state;}};class WillkommenPage extends connect(store)(LitElement){static get is(){return"willkommen-page"}static get properties(){return{}}constructor(){super()}createRenderRoot(){return this}render(){return html`
+`,INITIAL_STATE={lieferdiensteOnsListData:[{thumbnail:"https://via.placeholder.com/40x40",title:"Pinocchio Pizzawerkstatt",subtitle:""},{thumbnail:"https://via.placeholder.com/40x40",title:"ulm-isst.de/",subtitle:""},{thumbnail:"https://via.placeholder.com/40x40",title:"Hungry Turtle",subtitle:""},{thumbnail:"https://via.placeholder.com/40x40",title:"Triple Lieferservice",subtitle:""},{thumbnail:"https://via.placeholder.com/40x40",title:"Eismann",subtitle:""},{thumbnail:"https://via.placeholder.com/40x40",title:"Vorgl\xFChbar Ulm",subtitle:""},{thumbnail:"https://via.placeholder.com/40x40",title:"Mudita Bar",subtitle:""},{thumbnail:"https://via.placeholder.com/40x40",title:"Buddha Kitchen",subtitle:""},{thumbnail:"https://via.placeholder.com/40x40",title:"Ahi\xB4s Pizza",subtitle:""},{thumbnail:"https://via.placeholder.com/40x40",title:"Hemperium",subtitle:""},{thumbnail:"https://via.placeholder.com/40x40",title:"Burger Brothers Ulm",subtitle:""}],freizeitOnsListData:[{thumbnail:"https://cdn.glitch.com/fd96e08d-f7c4-4288-9bf3-2753e6b1b12e%2Ficon-48x48.png?v=1585075636352",title:"ULM@home",subtitle:"Wir bauen ULM@home",titleImage:"https://cdn.glitch.com/fd96e08d-f7c4-4288-9bf3-2753e6b1b12e%2Flogo-400x800.png?v=1585232517198",beschreibung:"Hallo Ulm, wir bauen ULM@home",informationen:[{}]}],freizeitItem:{}},app=(state=INITIAL_STATE,action)=>{switch(action.type){case SET_FREIZEIT_ITEM:return{...state,freizeitItem:action.payload};default:return state;}};class WillkommenPage extends connect(store)(LitElement){static get is(){return"willkommen-page"}static get properties(){return{}}constructor(){super()}createRenderRoot(){return this}render(){return html`
         <ons-page>
             <div class="content">
                 <ons-card class="ul">
