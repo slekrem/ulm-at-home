@@ -1,3 +1,5 @@
+import { SET_FREIZEIT_ITEM } from "../actions/app";
+
 const INITIAL_STATE = {
     lieferdiensteOnsListData: [
         {
@@ -60,13 +62,26 @@ const INITIAL_STATE = {
         {
             thumbnail: 'https://cdn.glitch.com/fd96e08d-f7c4-4288-9bf3-2753e6b1b12e%2Ficon-48x48.png?v=1585075636352',
             title: 'ULM@home',
-            subtitle: 'Wir bauen ULM@home'
+            subtitle: 'Wir bauen ULM@home',
+            titleImage: 'https://cdn.glitch.com/fd96e08d-f7c4-4288-9bf3-2753e6b1b12e%2Flogo-400x800.png?v=1585232517198',
+
+            beschreibung: 'Hallo Ulm, wir bauen ULM@home',
+            informationen: [
+                {}
+            ]
         }
-    ]
+    ],
+
+    freizeitItem: {}
 };
 
 const app = (state = INITIAL_STATE, action) => {
     switch (action.type) {
+        case SET_FREIZEIT_ITEM:
+            return {
+                ...state,
+                freizeitItem: action.payload
+            };
         default:
             return state;
     }

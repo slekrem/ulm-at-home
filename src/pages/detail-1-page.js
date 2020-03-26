@@ -5,10 +5,30 @@ import { LitElement, html } from "lit-element";
 
 export default class Detail1Page extends connect(store)(LitElement) {
     static get is() { return 'detail-1-page'; }
-    static get properties() { return {} }
+    static get properties() {
+        return {
+            _item: Object
+        }
+    }
 
     constructor() {
         super();
+        this._item = {};
+    }
+
+    _renderInformationenOnsListItem(item) {
+        return html`
+            <ons-list-item>
+                <div class="left">Source Code</div>
+                    <div class="center">
+                        <span class="list-item__title"></span>
+                        <span class="list-item__subtitle"></span>
+                    </div>
+                    <div class="right">
+                        <a href="https://github.com/slekrem/ulm-at-home" target="blank">github.com</a>
+                    </div>
+                </ons-list-item>
+                `;
     }
 
     createRenderRoot() { return this; }
@@ -19,45 +39,25 @@ export default class Detail1Page extends connect(store)(LitElement) {
                 <div class="left">
                     <ons-back-button>Zurück</ons-back-button>
                 </div>
-                <div class="center">TITEL</div>
+                <div class="center">${this._item.title}</div>
             </ons-toolbar>
             <div class="content">
-                <img src="https://via.placeholder.com/800x600" style="width:100%">
-                <h1>Titel</h1>
-                <p>
-                    Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. 
-                    At vero eos et accusam et justo duo dolores et ea rebum. 
-                    Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. 
-                    Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. 
-                    At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
-                </p>
-                <ons-list-title>subtitel</ons-list-title>
+                <img src="${this._item.titleImage}" style="width:100%">
+                <ons-card class="ul">
+                    <h1>${this._item.subtitle}</h1>
+                    <p>${this._item.beschreibung}</p>
+                </ons-card>
+                <ons-list-title>Informationen</ons-list-title>
                 <ons-list>
-                    <ons-list-item>simple content</ons-list-item>
-                    <ons-list-item>
-                        <div class="left">left content</div>
-                    </ons-list-item>
-                    <ons-list-item>
-                        <div class="left">left content</div>
-                        <div class="center">center content</div>
-                    </ons-list-item>
-                    <ons-list-item>
-                        <div class="left">left content</div>
-                        <div class="center">center content</div>
-                        <div class="right">right content</div>
-                    </ons-list-item>
-                    <ons-list-item>
-                        <div class="left">left content</div>
-                        <div class="center">
-                            <span class="list-item__title">title</span>
-                            <span class="list-item__subtitle">subtitle</span>
-                        </div>
-                        <div class="right">right content</div>
-                    </ons-list-item>
+                    ${this._item.informationen.map(item => this._renderInformationenOnsListItem(item))}
                 </ons-list>
             </div>
         </ons-page>
         `;
+    }
+
+    stateChanged(state) {
+        this._item = state.app.freizeitItem;
     }
 }
 customElements.define(Detail1Page.is, Detail1Page);
