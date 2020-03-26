@@ -12,6 +12,7 @@ export default class LieferdienstePage extends connect(store)(LitElement) {
 
     constructor() {
         super();
+        this._lieferdiensteOnsListData = [];
     }
 
     _renderOnsListItem(item) {

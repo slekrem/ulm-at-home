@@ -55,6 +55,13 @@ const INITIAL_STATE = {
             title: 'Burger Brothers Ulm',
             subtitle: ''
         },
+    ],
+    freizeitOnsListData: [
+        {
+            thumbnail: 'https://cdn.glitch.com/fd96e08d-f7c4-4288-9bf3-2753e6b1b12e%2Ficon-48x48.png?v=1585075636352',
+            title: 'ULM@home',
+            subtitle: 'Wir bauen ULM@home'
+        }
     ]
 };
 

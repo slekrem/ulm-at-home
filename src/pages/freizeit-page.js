@@ -4,10 +4,29 @@ import { LitElement, html } from "lit-element";
 
 export default class FreizeitPage extends connect(store)(LitElement) {
     static get is() { return 'freizeit-page'; }
-    static get properties() { return {} }
+    static get properties() {
+        return {
+            _freizeitOnsListData: []
+        };
+    }
 
     constructor() {
         super();
+        this._freizeitOnsListData = [];
+    }
+
+    _renderOnsListItem(item) {
+        return html`
+            <ons-list-item modifier="chevron" tappable @click="${this._onOnsListItemClick}">
+                <div class="left">
+                    <img class="list-item__thumbnail" src="${item.thumbnail}">
+                </div>
+                    <div class="center">
+                        <span class="list-item__title">${item.title}</span>
+                        <span class="list-item__subtitle">${item.subtitle}</span>
+                    </div>
+                </ons-list-item>
+                `;
     }
 
     createRenderRoot() { return this; }
@@ -17,108 +36,22 @@ export default class FreizeitPage extends connect(store)(LitElement) {
             <div class="content">
                 <h1>Freizeit@home</h1>
                 <p>
-                    Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. 
-                    At vero eos et accusam et justo duo dolores et ea rebum. 
-                    Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. 
-                    Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. 
-                    At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+                    Der Aufenthalt zu Hause bietet viele kreative und nützliche Möglichkeiten, um seine Freizeit abwechslungsreich, sinnvoll und bunt zu gestalten. 
+                    In dieser Kategorie sammeln wir Ideen, Inspirationen und Vorschläge gegen die Langeweile daheim. 
+                    Hobbys jeglicher Art sollen hier Platz finden. Communities, Workshops oder zum Beispiel auch Online-Treffen, zum gemeinsamen Yoga, findest du unter diesem Bereich.
+                    Für eine Teilnahme, Links oder Ideen sende eine email an (LINK)
                 </p>
                 <ons-list-title>Titel</ons-list-title>
                 <ons-list>
-                    <ons-list-item modifier="chevron" tappable @click="${this._onOnsListItemClick}">
-                        <div class="left">
-                            <img class="list-item__thumbnail" src="https://via.placeholder.com/40x40">
-                        </div>
-                        <div class="center">
-                            <span class="list-item__title">title 1</span>
-                            <span class="list-item__subtitle">subtitle 1</span>
-                        </div>
-                    </ons-list-item>
-                    <ons-list-item modifier="chevron" tappable @click="${this._onOnsListItemClick}">
-                        <div class="left">
-                            <img class="list-item__thumbnail" src="https://via.placeholder.com/40x40">
-                        </div>
-                        <div class="center">
-                            <span class="list-item__title">title 2</span>
-                            <span class="list-item__subtitle">subtitle 2</span>
-                        </div>
-                    </ons-list-item>
-                    <ons-list-item modifier="chevron" tappable @click="${this._onOnsListItemClick}">
-                        <div class="left">
-                            <img class="list-item__thumbnail" src="https://via.placeholder.com/40x40">
-                        </div>
-                        <div class="center">
-                            <span class="list-item__title">title 3</span>
-                            <span class="list-item__subtitle">subtitle 3</span>
-                        </div>
-                    </ons-list-item>
-                    <ons-list-item modifier="chevron" tappable @click="${this._onOnsListItemClick}">
-                        <div class="left">
-                            <img class="list-item__thumbnail" src="https://via.placeholder.com/40x40">
-                        </div>
-                        <div class="center">
-                            <span class="list-item__title">title 4</span>
-                            <span class="list-item__subtitle">subtitle 4</span>
-                        </div>
-                    </ons-list-item>
-                    <ons-list-item modifier="chevron" tappable @click="${this._onOnsListItemClick}">
-                        <div class="left">
-                            <img class="list-item__thumbnail" src="https://via.placeholder.com/40x40">
-                        </div>
-                        <div class="center">
-                            <span class="list-item__title">title 5</span>
-                            <span class="list-item__subtitle">subtitle 5</span>
-                        </div>
-                    </ons-list-item>
-                    <ons-list-item modifier="chevron" tappable @click="${this._onOnsListItemClick}">
-                        <div class="left">
-                            <img class="list-item__thumbnail" src="https://via.placeholder.com/40x40">
-                        </div>
-                        <div class="center">
-                            <span class="list-item__title">title 6</span>
-                            <span class="list-item__subtitle">subtitle 6</span>
-                        </div>
-                    </ons-list-item>
-                    <ons-list-item modifier="chevron" tappable @click="${this._onOnsListItemClick}">
-                        <div class="left">
-                            <img class="list-item__thumbnail" src="https://via.placeholder.com/40x40">
-                        </div>
-                        <div class="center">
-                            <span class="list-item__title">title 7</span>
-                            <span class="list-item__subtitle">subtitle 7</span>
-                        </div>
-                    </ons-list-item>
-                    <ons-list-item modifier="chevron" tappable @click="${this._onOnsListItemClick}">
-                        <div class="left">
-                            <img class="list-item__thumbnail" src="https://via.placeholder.com/40x40">
-                        </div>
-                        <div class="center">
-                            <span class="list-item__title">title 8</span>
-                            <span class="list-item__subtitle">subtitle 8</span>
-                        </div>
-                    </ons-list-item>
-                    <ons-list-item modifier="chevron" tappable @click="${this._onOnsListItemClick}">
-                        <div class="left">
-                            <img class="list-item__thumbnail" src="https://via.placeholder.com/40x40">
-                        </div>
-                        <div class="center">
-                            <span class="list-item__title">title 9</span>
-                            <span class="list-item__subtitle">subtitle 9</span>
-                        </div>
-                    </ons-list-item>
-                    <ons-list-item modifier="chevron" tappable @click="${this._onOnsListItemClick}">
-                        <div class="left">
-                            <img class="list-item__thumbnail" src="https://via.placeholder.com/40x40">
-                        </div>
-                        <div class="center">
-                            <span class="list-item__title">title 10</span>
-                            <span class="list-item__subtitle">subtitle 10</span>
-                        </div>
-                    </ons-list-item>
+                    ${this._freizeitOnsListData.map(item => this._renderOnsListItem(item))}
                 </ons-list>
             </div>
         </ons-page>
         `;
+    }
+
+    stateChanged(state) {
+        this._freizeitOnsListData = state.app.freizeitOnsListData;
     }
 
     _onOnsListItemClick() {
