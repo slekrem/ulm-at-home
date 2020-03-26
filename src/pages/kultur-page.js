@@ -17,11 +17,14 @@ export default class KulturPage extends connect(store)(LitElement) {
             <div class="content">
                 <h1>Kultur@home</h1>
                 <p>
-                    Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. 
-                    At vero eos et accusam et justo duo dolores et ea rebum. 
-                    Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. 
-                    Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. 
-                    At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+                    Museen, Kinos und Clubs müssen aufgrund der Corona-Pandemie aktuell ihre Türen geschlossen halten. 
+                    Es gibt inzwischen täglich immer mehr kreative Idden und Möglichkeiten, wie auch dieses wichtige Gut weiterhin aktiv stattfinden und praktiziert werden kann.
+                    Fotografen führen euch in ihren Online-Kursen an neue Praktiken und Techniken, rund ums Fotografieren – auch im geschlossenen Raum, DJ's veranstalten Live-Streams von ihren Sets, 
+                    zum Mithören und Tanzen und viele lokale Kunst- und Handwerk-Schaffende, wie Tätowierer, 
+                    Maler oder regionale Modelabels bieten ihre Kunst oder Produkte in Online-Shops zum Verkauf an – gerade hier findest du aktuell jede Menge Sonderangebote und eine bequeme Möglichkeit, 
+                    Kunst und Handwerk zu dir nach Hause liefern zu lassen.
+                    Um auch deinen Link zur Website, Socialmedia-Kanal oder zum Onlineshop unter einer der untenstehenden Kategorien zu finden, schicke uns eine e-mail an – schreibe uns dafür gerne auch einen kleinen Text, 
+                    den wir in die Info-Box packen dürfen (LINK).
                 </p>
                 <ons-list-title>Titel</ons-list-title>
                 <ons-list>

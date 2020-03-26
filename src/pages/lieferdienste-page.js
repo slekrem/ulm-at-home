@@ -4,10 +4,28 @@ import { LitElement, html } from "lit-element";
 
 export default class LieferdienstePage extends connect(store)(LitElement) {
     static get is() { return 'lieferdienste-page'; }
-    static get properties() { return {} }
+    static get properties() {
+        return {
+            _lieferdiensteOnsListData: []
+        };
+    }
 
     constructor() {
         super();
+    }
+
+    _renderOnsListItem(item) {
+        return html`
+            <ons-list-item modifier="chevron" tappable @click="${this._onOnsListItemClick}">
+                <div class="left">
+                    <img class="list-item__thumbnail" src="${item.thumbnail}">
+                </div>
+                    <div class="center">
+                        <span class="list-item__title">${item.title}</span>
+                        <span class="list-item__subtitle">${item.subtitle}</span>
+                    </div>
+                </ons-list-item>
+                `;
     }
 
     createRenderRoot() { return this; }
@@ -17,108 +35,23 @@ export default class LieferdienstePage extends connect(store)(LitElement) {
             <div class="content">
                 <h1>Hunger@home</h1>
                 <p>
-                    Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. 
-                    At vero eos et accusam et justo duo dolores et ea rebum. 
-                    Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. 
-                    Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. 
-                    At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+                    Viele lokale Gastronomen - darunter Restaurants, Bars und Kneipen - bieten aktuell einen speziellen Lifer- oder Abholservice an. 
+                    Egal ob regionale Burger, der Coktail aus deiner Lieblings-Bar oder die Familienpizza vom Italiener deines Vertrauens – der Betrieb vieler Unternehmen geht weiter. 
+                    Gerade jetzt sind diese auf dich angewiesen. Im Folgenden findest du eine Vielzahl an Ulmer Betrieben, die dich mit leckerem Essen, besonderen Drinks und Snacks beliefern.
+                    Klicke einfach auf den Namen, um weitere Infos zu Lieferzeiten, Sonderangeboten und co zu finden.
+                    Falls dein Betrieb noch nicht in der Liste zu finden ist, sende eine email an (LINK)
                 </p>
                 <ons-list-title>Titel</ons-list-title>
                 <ons-list>
-                    <ons-list-item modifier="chevron" tappable @click="${this._onOnsListItemClick}">
-                        <div class="left">
-                            <img class="list-item__thumbnail" src="https://via.placeholder.com/40x40">
-                        </div>
-                        <div class="center">
-                            <span class="list-item__title">Pinocchio</span>
-                            <span class="list-item__subtitle">Pizzawerkstatt</span>
-                        </div>
-                    </ons-list-item>
-                    <ons-list-item modifier="chevron" tappable @click="${this._onOnsListItemClick}">
-                        <div class="left">
-                            <img class="list-item__thumbnail" src="https://via.placeholder.com/40x40">
-                        </div>
-                        <div class="center">
-                            <span class="list-item__title">title 2</span>
-                            <span class="list-item__subtitle">subtitle 2</span>
-                        </div>
-                    </ons-list-item>
-                    <ons-list-item modifier="chevron" tappable @click="${this._onOnsListItemClick}">
-                        <div class="left">
-                            <img class="list-item__thumbnail" src="https://via.placeholder.com/40x40">
-                        </div>
-                        <div class="center">
-                            <span class="list-item__title">title 3</span>
-                            <span class="list-item__subtitle">subtitle 3</span>
-                        </div>
-                    </ons-list-item>
-                    <ons-list-item modifier="chevron" tappable @click="${this._onOnsListItemClick}">
-                        <div class="left">
-                            <img class="list-item__thumbnail" src="https://via.placeholder.com/40x40">
-                        </div>
-                        <div class="center">
-                            <span class="list-item__title">title 4</span>
-                            <span class="list-item__subtitle">subtitle 4</span>
-                        </div>
-                    </ons-list-item>
-                    <ons-list-item modifier="chevron" tappable @click="${this._onOnsListItemClick}">
-                        <div class="left">
-                            <img class="list-item__thumbnail" src="https://via.placeholder.com/40x40">
-                        </div>
-                        <div class="center">
-                            <span class="list-item__title">title 5</span>
-                            <span class="list-item__subtitle">subtitle 5</span>
-                        </div>
-                    </ons-list-item>
-                    <ons-list-item modifier="chevron" tappable @click="${this._onOnsListItemClick}">
-                        <div class="left">
-                            <img class="list-item__thumbnail" src="https://via.placeholder.com/40x40">
-                        </div>
-                        <div class="center">
-                            <span class="list-item__title">title 6</span>
-                            <span class="list-item__subtitle">subtitle 6</span>
-                        </div>
-                    </ons-list-item>
-                    <ons-list-item modifier="chevron" tappable @click="${this._onOnsListItemClick}">
-                        <div class="left">
-                            <img class="list-item__thumbnail" src="https://via.placeholder.com/40x40">
-                        </div>
-                        <div class="center">
-                            <span class="list-item__title">title 7</span>
-                            <span class="list-item__subtitle">subtitle 7</span>
-                        </div>
-                    </ons-list-item>
-                    <ons-list-item modifier="chevron" tappable @click="${this._onOnsListItemClick}">
-                        <div class="left">
-                            <img class="list-item__thumbnail" src="https://via.placeholder.com/40x40">
-                        </div>
-                        <div class="center">
-                            <span class="list-item__title">title 8</span>
-                            <span class="list-item__subtitle">subtitle 8</span>
-                        </div>
-                    </ons-list-item>
-                    <ons-list-item modifier="chevron" tappable @click="${this._onOnsListItemClick}">
-                        <div class="left">
-                            <img class="list-item__thumbnail" src="https://via.placeholder.com/40x40">
-                        </div>
-                        <div class="center">
-                            <span class="list-item__title">title 9</span>
-                            <span class="list-item__subtitle">subtitle 9</span>
-                        </div>
-                    </ons-list-item>
-                    <ons-list-item modifier="chevron" tappable @click="${this._onOnsListItemClick}">
-                        <div class="left">
-                            <img class="list-item__thumbnail" src="https://via.placeholder.com/40x40">
-                        </div>
-                        <div class="center">
-                            <span class="list-item__title">title 10</span>
-                            <span class="list-item__subtitle">subtitle 10</span>
-                        </div>
-                    </ons-list-item>
+                    ${this._lieferdiensteOnsListData.map(item => this._renderOnsListItem(item))}
                 </ons-list>
             </div>
         </ons-page>
         `;
+    }
+
+    stateChanged(state) {
+        this._lieferdiensteOnsListData = state.app.lieferdiensteOnsListData;
     }
 
     _onOnsListItemClick() {

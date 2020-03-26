@@ -17,11 +17,10 @@ export default class InfosPage extends connect(store)(LitElement) {
             <div class="content">
                 <h1>Infos@home</h1>
                 <p>
-                    Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. 
-                    At vero eos et accusam et justo duo dolores et ea rebum. 
-                    Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. 
-                    Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. 
-                    At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+                    Unter diesem Bereich findest du alle Infos rund um Fragen zu COVID-19, in und um Ulm. Nachbarschafts-Hilfen, Stellenausschreibungen von Betrieben, die aktuell Unterstützung benötigen, 
+                    aber auch generelle Infos, wie Links zu youtube-Videos, Hygiene-Maßnahmen und Verhaltensweisen, während der aktuellen Lage.
+                    Gesammelt unter einer Kategorie, wollen wir hier gemeinsam Nützliches und auch die positiven Aspekte zusammentragen. Eigen-verfasste Texte, wie du mit der aktuellen Lebenssituation umgehst, 
+                    haben ebenfalls hier einen Platz. Sende deine Anregung, Angebote zur Mithilfe und co an diese e-mail-Adresse: (LINK)
                 </p>
                 <ons-list-title>Titel</ons-list-title>
                 <ons-list>

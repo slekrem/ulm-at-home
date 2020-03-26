@@ -1,10 +1,16 @@
-
 import { connect } from "pwa-helpers";
 import { store } from "./redux/store";
 import { LitElement, html } from "lit-element";
 
+import {
+    renderKategorienPage,
+    renderDetail1Page
+} from "./template";
+
+import app from './redux/reducers/app';
 import './pages/willkommen-page'
-import { renderKategorienPage, renderDetail1Page } from "./template";
+
+store.addReducers({ app });
 
 export default class UlmApp extends connect(store)(LitElement) {
     static get is() { return 'ulm-app'; }
