@@ -1,13 +1,33 @@
 import { connect } from "pwa-helpers";
 import { store } from "../redux/store";
 import { LitElement, html } from "lit-element";
+import { setKulturItem } from "../redux/actions/app";
 
 export default class KulturPage extends connect(store)(LitElement) {
     static get is() { return 'kultur-page'; }
-    static get properties() { return {} }
+    static get properties() {
+        return {
+            _kulturOnsListData: Object,
+        }
+    }
 
     constructor() {
         super();
+        this._kulturOnsListData = [];
+    }
+
+    _renderOnsListItem(item) {
+        return html`
+            <ons-list-item modifier="chevron" tappable @click="${() => this._onOnsListItemClick(item)}">
+                <div class="left">
+                    <img class="list-item__thumbnail" src="${item.thumbnail}">
+                </div>
+                <div class="center">
+                    <span class="list-item__title">${item.title}</span>
+                    <span class="list-item__subtitle">${item.subtitle}</span>
+                </div>
+            </ons-list-item>
+            `;
     }
 
     createRenderRoot() { return this; }
@@ -28,103 +48,19 @@ export default class KulturPage extends connect(store)(LitElement) {
                 </p>
                 <ons-list-title>Titel</ons-list-title>
                 <ons-list>
-                    <ons-list-item modifier="chevron" tappable @click="${this._onOnsListItemClick}">
-                        <div class="left">
-                            <img class="list-item__thumbnail" src="https://via.placeholder.com/40x40">
-                        </div>
-                        <div class="center">
-                            <span class="list-item__title">title 1</span>
-                            <span class="list-item__subtitle">subtitle 1</span>
-                        </div>
-                    </ons-list-item>
-                    <ons-list-item modifier="chevron" tappable @click="${this._onOnsListItemClick}">
-                        <div class="left">
-                            <img class="list-item__thumbnail" src="https://via.placeholder.com/40x40">
-                        </div>
-                        <div class="center">
-                            <span class="list-item__title">title 2</span>
-                            <span class="list-item__subtitle">subtitle 2</span>
-                        </div>
-                    </ons-list-item>
-                    <ons-list-item modifier="chevron" tappable @click="${this._onOnsListItemClick}">
-                        <div class="left">
-                            <img class="list-item__thumbnail" src="https://via.placeholder.com/40x40">
-                        </div>
-                        <div class="center">
-                            <span class="list-item__title">title 3</span>
-                            <span class="list-item__subtitle">subtitle 3</span>
-                        </div>
-                    </ons-list-item>
-                    <ons-list-item modifier="chevron" tappable @click="${this._onOnsListItemClick}">
-                        <div class="left">
-                            <img class="list-item__thumbnail" src="https://via.placeholder.com/40x40">
-                        </div>
-                        <div class="center">
-                            <span class="list-item__title">title 4</span>
-                            <span class="list-item__subtitle">subtitle 4</span>
-                        </div>
-                    </ons-list-item>
-                    <ons-list-item modifier="chevron" tappable @click="${this._onOnsListItemClick}">
-                        <div class="left">
-                            <img class="list-item__thumbnail" src="https://via.placeholder.com/40x40">
-                        </div>
-                        <div class="center">
-                            <span class="list-item__title">title 5</span>
-                            <span class="list-item__subtitle">subtitle 5</span>
-                        </div>
-                    </ons-list-item>
-                    <ons-list-item modifier="chevron" tappable @click="${this._onOnsListItemClick}">
-                        <div class="left">
-                            <img class="list-item__thumbnail" src="https://via.placeholder.com/40x40">
-                        </div>
-                        <div class="center">
-                            <span class="list-item__title">title 6</span>
-                            <span class="list-item__subtitle">subtitle 6</span>
-                        </div>
-                    </ons-list-item>
-                    <ons-list-item modifier="chevron" tappable @click="${this._onOnsListItemClick}">
-                        <div class="left">
-                            <img class="list-item__thumbnail" src="https://via.placeholder.com/40x40">
-                        </div>
-                        <div class="center">
-                            <span class="list-item__title">title 7</span>
-                            <span class="list-item__subtitle">subtitle 7</span>
-                        </div>
-                    </ons-list-item>
-                    <ons-list-item modifier="chevron" tappable @click="${this._onOnsListItemClick}">
-                        <div class="left">
-                            <img class="list-item__thumbnail" src="https://via.placeholder.com/40x40">
-                        </div>
-                        <div class="center">
-                            <span class="list-item__title">title 8</span>
-                            <span class="list-item__subtitle">subtitle 8</span>
-                        </div>
-                    </ons-list-item>
-                    <ons-list-item modifier="chevron" tappable @click="${this._onOnsListItemClick}">
-                        <div class="left">
-                            <img class="list-item__thumbnail" src="https://via.placeholder.com/40x40">
-                        </div>
-                        <div class="center">
-                            <span class="list-item__title">title 9</span>
-                            <span class="list-item__subtitle">subtitle 9</span>
-                        </div>
-                    </ons-list-item>
-                    <ons-list-item modifier="chevron" tappable @click="${this._onOnsListItemClick}">
-                        <div class="left">
-                            <img class="list-item__thumbnail" src="https://via.placeholder.com/40x40">
-                        </div>
-                        <div class="center">
-                            <span class="list-item__title">title 10</span>
-                            <span class="list-item__subtitle">subtitle 10</span>
-                        </div>
-                    </ons-list-item>
+                    ${this._kulturOnsListData.map(item => this._renderOnsListItem(item))}
                 </ons-list>
             </div>
         </ons-page>
         `;
     }
 
-    _onOnsListItemClick() {
+    stateChanged(state) {
+        this._kulturOnsListData = state.app.kulturOnsListData;
+    }
+
+    _onOnsListItemClick(item) {
+        store.dispatch(setKulturItem(item));
         document.querySelector('ons-navigator')
             .pushPage('detail-1-page.html');
     }

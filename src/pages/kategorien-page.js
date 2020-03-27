@@ -10,6 +10,7 @@ import {
     renderAddItem_1_Page,
     renderItemExportPage
 } from "../template";
+import { setKategorie } from "../redux/actions/app";
 
 export default class KategorienPage extends connect(store)(LitElement) {
     static get is() { return 'kategorien-page'; }
@@ -17,6 +18,7 @@ export default class KategorienPage extends connect(store)(LitElement) {
 
     constructor() {
         super();
+        store.dispatch(setKategorie(0));
     }
 
     createRenderRoot() { return this; }
@@ -29,7 +31,7 @@ export default class KategorienPage extends connect(store)(LitElement) {
                     <ons-toolbar-button icon="fa-plus" @click="${this._onFaPlusClick}"></ons-toolbar-button>
                 </div>
             </ons-toolbar>
-            <ons-tabbar>
+            <ons-tabbar @prechange="${this._onTabbarPrechange}">
                 <ons-tab page="freizeit-page.html" label="Freizeit" icon="fa-clock" active></ons-tab>
                 <ons-tab page="lieferdienste-page.html" label="Lieferdienste" icon="fa-truck"></ons-tab>
                 <ons-tab page="kultur-page.html" label="Kultur" icon="fa-theater-masks"></ons-tab>
@@ -41,10 +43,15 @@ export default class KategorienPage extends connect(store)(LitElement) {
         ${renderLieferdienstePage()}
         ${renderKulturPage()}
         ${renderInfosPage()}
+
         ${renderAddItemPage()}
         ${renderAddItem_1_Page()}
         ${renderItemExportPage()}
         `;
+    }
+
+    _onTabbarPrechange(event) { 
+        store.dispatch(setKategorie(event.index));
     }
 
     _onFaPlusClick() {

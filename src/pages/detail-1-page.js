@@ -55,7 +55,20 @@ export default class Detail1Page extends connect(store)(LitElement) {
     }
 
     stateChanged(state) {
-        this._item = state.app.freizeitItem;
+        switch (state.app.kategorie) {
+            case 0:
+                this._item = state.app.freizeitItem;
+                break;
+            case 1:
+                this._item = state.app.lieferdiensteItem;
+                break;
+            case 2:
+                this._item = state.app.kulturItem;
+                break;
+            default:
+                break;
+        }
+        console.log('asd', this._item);
     }
 }
 customElements.define(Detail1Page.is, Detail1Page);
