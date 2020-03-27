@@ -5,7 +5,10 @@ import {
     renderFreizeitPage,
     renderLieferdienstePage,
     renderKulturPage,
-    renderInfosPage
+    renderInfosPage,
+    renderAddItemPage,
+    renderAddItem_1_Page,
+    renderItemExportPage
 } from "../template";
 
 export default class KategorienPage extends connect(store)(LitElement) {
@@ -22,6 +25,9 @@ export default class KategorienPage extends connect(store)(LitElement) {
         <ons-page>
             <ons-toolbar>
                 <div class="center">ULM@home</div>
+                <div class="right">
+                    <ons-toolbar-button icon="fa-plus" @click="${this._onFaPlusClick}"></ons-toolbar-button>
+                </div>
             </ons-toolbar>
             <ons-tabbar>
                 <ons-tab page="freizeit-page.html" label="Freizeit" icon="fa-clock" active></ons-tab>
@@ -35,7 +41,15 @@ export default class KategorienPage extends connect(store)(LitElement) {
         ${renderLieferdienstePage()}
         ${renderKulturPage()}
         ${renderInfosPage()}
+        ${renderAddItemPage()}
+        ${renderAddItem_1_Page()}
+        ${renderItemExportPage()}
         `;
+    }
+
+    _onFaPlusClick() {
+        document.querySelector('ons-navigator')
+            .pushPage('add-item-page.html');
     }
 }
 customElements.define(KategorienPage.is, KategorienPage);

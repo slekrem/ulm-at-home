@@ -53,3 +53,30 @@ export const renderDetail1Page = () => html`
     </ons-page>
 </template>
 `;
+
+import './pages/add-item-page';
+export const renderAddItemPage = () => html`
+<template id="add-item-page.html">
+    <ons-page>
+        <add-item-page></add-item-page>
+    </ons-page>
+</template>
+`;
+
+import './pages/add-item-1-page';
+export const renderAddItem_1_Page = () => html`
+<template id="add-item-1-page.html">
+    <ons-page>
+        <add-item-1-page></add-item-1-page>
+    </ons-page>
+</template>
+`;
+
+import './pages/item-export-page';
+export const renderItemExportPage = () => html`
+<template id="item-export-page.html">
+    <ons-page>
+        <item-export-page></item-export-page>
+    </ons-page>
+</template>
+`;
