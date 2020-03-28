@@ -44,7 +44,7 @@ export default class FreizeitPage extends connect(store)(LitElement) {
                         Für eine Teilnahme, Links oder Ideen sende eine email an (LINK)
                     </p>
                 </ons-card>
-                <ons-list-title>Titel</ons-list-title>
+                <ons-list-title>&nbsp;</ons-list-title>
                 <ons-list>
                     ${this._freizeitOnsListData.map(item => this._renderOnsListItem(item))}
                 </ons-list>
