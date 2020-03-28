@@ -1,4 +1,3 @@
-
 import { connect } from "pwa-helpers";
 import { store } from "../redux/store";
 import { LitElement, html } from "lit-element";
@@ -65,11 +64,21 @@ export default class ListItemConfigurator extends connect(store)(LitElement) {
                     <div class="left">
                         <ons-toolbar-button @click="${this._onZurueckClick}">Zurück</ons-toolbar-button>
                     </div>
+                    <div class="center">Item Konfigurator</div>
                     <div class="right">
                         <ons-toolbar-button @click="${this._onFertigClick}">Fertig</ons-toolbar-button>
                     </div>
                 </ons-toolbar>
                 <div class="content">
+                    <ons-card>
+                        <h1>Lorem ipsum</h1>
+                        <p>
+                            Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam
+                        </p>
+                    </ons-card>
+
+
+
                     <ons-list-title>Daten</ons-list-title>
                     <ons-list>
                         <ons-list-item>

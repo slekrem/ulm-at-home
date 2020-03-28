@@ -194,6 +194,10 @@ export default class AddItem_1_Page extends connect(store)(LitElement) {
     }
 
     _onAddItemClick() {
+        
+
+
+
         const listItemConfigurator = this.querySelector('list-item-configurator'),
             onsModal = this.querySelector('ons-modal');
         listItemConfigurator.setItem({
