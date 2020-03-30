@@ -1,43 +1,188 @@
-
 import { connect } from "pwa-helpers";
 import { store } from "../redux/store";
 import { LitElement, html } from "lit-element";
 
 import './list-item-configurator';
+import {
+    render_onsListItem_standard,
+    render_onsListItem_expandable,
+    render_onsListItem_url,
+    render_onsListItem_vorschaubilderUndTitel
+} from "../ons-components/ons-components";
 
 export default class AddItem_1_Page extends connect(store)(LitElement) {
     static get is() { return 'add-item-1-page'; }
     static get properties() {
         return {
+            _onsListItemData: Object,
+
             _titel: String,
-            _kategorie: String,
             _titleImage: String,
             _subtitle: String,
             _beschreibung: String,
+
             _items: Object,
-            _subtitleActive: Boolean,
-            _beschreibungActive: Boolean
         }
     }
 
     constructor() {
         super();
+        this._onsListItemData = {};
+
         this._titel = '';
-        this._kategorie = '';
         this._titleImage = 'https://via.placeholder.com/800x600';
-        this._subtitle = 'Subtitle';
-        this._beschreibung = 'Beschreibung';
+        this._subtitle = '';
+        this._beschreibung = '';
         this._items = {};
-        this._subtitleActive = false;
-        this._beschreibungActive = false;
     }
 
-    setTitel(titel) {
-        this._titel = titel;
+    _render_onsToolbar() {
+        return html`
+        <ons-toolbar>
+            <div class="left">
+                <ons-back-button>Zurück</ons-back-button>
+            </div>
+            <div class="center">${this._titel}</div>
+            <div class="right">
+                <ons-toolbar-button @click="${this._onDownloadClick}">Download</ons-toolbar-button>
+            </div>
+        </ons-toolbar>
+        `;
     }
 
-    setKategorie(kategorie) {
-        this._kategorie = kategorie;
+    _render_onsCard() {
+        return html`
+        <ons-card>
+            <h1>Lorem ipsum</h1>
+            <p>
+                Lorem ipsum dolor sit amet, consetetur sadipscing elitr, 
+                sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam
+            </p>
+        </ons-card>
+        `;
+    }
+
+    _render_onsList_stammdaten() {
+        const onBildAuswaelenClick = () => {
+            const input = document.createElement('input'),
+                reader = new FileReader();
+            input.setAttribute('type', 'file');
+            input.setAttribute('accept', 'image/*');
+            input.onchange = (e) => {
+                const file = e.srcElement.files[0];
+                if (!file) return;
+                reader.onload = (e) => this._titleImage = e.target.result;
+                reader.readAsDataURL(file);
+            }
+            input.click();
+        }
+        return html`
+        <ons-list-title>Stammdaten</ons-list-title>
+        <ons-list>
+            <ons-list-item>
+                <div class="center">Titelbild</div>
+                <div class="right">
+                    <ons-button
+                        modifier="large--quiet"
+                        @click="${onBildAuswaelenClick}">Bild auswählen</ons-button>
+                </div>
+            </ons-list-item>
+            <ons-list-item>
+                <div class="center">Titel</div>
+                <div class="right">
+                    <ons-input placeholder="Titel" style="width: 167px;"
+                        @value="${this._titel}"
+                        @change="${e => this._subtitle = e.srcElement.value}"></ons-input>
+                </div>
+            </ons-list-item>
+            <ons-list-item>
+                <div class="center">Beschreibung</div>
+                <div class="right">
+                    <ons-input placeholder="Beschreibung" style="width: 167px;"
+                        @value="${this._beschreibung}"
+                        @change="${e => this._beschreibung = e.srcElement.value}"></ons-input>
+                </div>
+            </ons-list-item>
+        </ons-list>
+        `;
+    }
+
+    _render_onsList_informationen_onsListitem(item) {
+        switch (item.vorlage) {
+            case 'Standard':
+                return html`
+                    <ons-list-item modifier="chevron" tappable
+                        @click="${() => this._onInformationsEintragClick(item)}">
+                        ${item.text}
+                    </ons-list-item>
+                `;
+            case 'Erweiterbar':
+                return html`
+                <ons-list-item modifier="chevron" tappable
+                    @click="${() => this._onInformationsEintragClick(item)}">
+                    ${item.text}
+                </ons-list-item>
+                `;
+            case 'Url':
+                return html`
+                <ons-list-item modifier="chevron" tappable
+                    @click="${() => this._onInformationsEintragClick(item)}">
+                    ${item.title}
+                </ons-list-item>
+                `;
+            case 'Vorschaubilder und Titel':
+                return html`
+                <ons-list-item modifier="chevron" tappable
+                    @click="${() => this._onInformationsEintragClick(item)}">
+                    ${item.titel}
+                </ons-list-item>
+                `;
+            default:
+                return html``;
+        }
+    }
+
+    _render_onsList_informationen() {
+        return html`
+        <ons-list-title>Informationen</ons-list-title>
+        <ons-list>
+            ${Object.keys(this._items).map(key => this._render_onsList_informationen_onsListitem(this._items[key]))}
+            ${this._renderNeuerInformationsEintrag()}
+        </ons-list>
+        `;
+    }
+
+    _render_vorschau_onsListItem(item) {
+        switch (item.vorlage) {
+            case 'Standard':
+                return render_onsListItem_standard({
+                    content: item.text
+                });
+            case 'Erweiterbar':
+                return render_onsListItem_expandable(item);
+            case 'Url':
+                return render_onsListItem_url(item);
+            case 'Vorschaubilder und Titel':
+                return render_onsListItem_vorschaubilderUndTitel(item);
+            default:
+                return html``;
+        }
+    }
+
+    _render_vorschau() {
+        return html`
+        <ons-list-title>&nbsp;</ons-list-title>
+        <ons-list-title>Vorschau</ons-list-title>
+        <img src="${this._titleImage}" style="width:100%">
+        <ons-card class="ul">
+            <h1>${this._subtitle}</h1>
+            <p>${this._beschreibung}</p>
+        </ons-card>
+        <ons-list-title>Informationen</ons-list-title>
+        <ons-list>
+            ${Object.keys(this._items).map(key => this._render_vorschau_onsListItem(this._items[key]))}
+        </ons-list>
+        `;
     }
 
     _renderInformationenOnsListItem(item) {
@@ -53,135 +198,79 @@ export default class AddItem_1_Page extends connect(store)(LitElement) {
             `;
     }
 
-    _renderFormInputs() {
+    _renderNeuerInformationsEintrag() {
         return html`
-            <input id="titleImage" hidden type="file" accept="image/*"
-                @change="${this._onTitleImageChange}" />
+            <ons-list-item modifier="chevron" tappable
+                @click="${this._onNeuerInformationsEintragClick}">Neuer Informations Eintrag</ons-list-item>
         `;
-    }
-
-    _renderSubtitle() {
-        if (this._subtitleActive)
-            return html`<input type="text" autofocus
-                @blur="${this._onSubtitleInputBlur}"
-                @change="${e => this._subtitle = e.srcElement.value}"
-                value="${this._subtitle}"
-                style="
-                    width: 100%;
-                    background: transparent;
-                    border: none;
-
-                    color:rgb(79, 79, 79);
-                    display:block;
-                    font-family:Roboto, Noto, sans-serif;
-                    font-size:28px;
-                    font-weight:500;
-                    height:32px;
-                    margin-block-end:16.8px;
-                    margin-block-start:16.8px;
-                    margin-bottom:16.8px;
-                    margin-inline-end:0px;
-                    margin-inline-start:0px;
-                    margin-left:0px;
-                    margin-right:0px;
-                    margin-top:16.8px;
-                    overflow-wrap:break-word;
-                    padding-bottom:0px;
-                    padding-left:0px;
-                    padding-right:0px;
-                    padding-top:0px;
-                    text-align:left;
-                    text-size-adjust:100%;
-                    user-select:none;
-                    -webkit-font-smoothing:antialiased;
-                    -webkit-tap-highlight-color:rgb(0, 0, 0);">`;
-        return html`<h1 @click="${this._onSubtitleClick}">${this._subtitle}</h1>`;
-    }
-
-    _renderBeschreibung() {
-        if (this._beschreibungActive)
-            return html`<input type="text" autofocus
-                @blur="${this._onBeschreibungInputBlur}"
-                @change="${e => this._beschreibung = e.srcElement.value}"
-                value="${this._beschreibung}"
-                style="
-                    width: 100%;
-                    background: transparent;
-                    border: none;
-                    
-                    color:rgb(79, 79, 79);
-                    display:block;
-                    font-weight:400;
-                    height:18px;
-                    margin-block-end:16px;
-                    margin-block-start:16px;
-                    margin-inline-end:0px;
-                    margin-inline-start:0px;
-                    overflow-wrap:break-word;
-                    text-align:left;
-                    text-size-adjust:100%;
-                    user-select:none;
-                    width:366px;
-                    -webkit-font-smoothing:antialiased;
-                    -webkit-tap-highlight-color:rgb(0, 0, 0);
-                    ">`;
-        return html`<p @click="${this._onBeschreibungClick}">${this._beschreibung}</p>`;
     }
 
     createRenderRoot() { return this; }
     render() {
         return html`
         <ons-page>
-            <ons-toolbar>
-                <div class="left">
-                    <ons-back-button>Zurück</ons-back-button>
-                </div>
-                <div class="center">${this._titel}</div>
-                <div class="right">
-                    <ons-toolbar-button @click="${this._onDownloadClick}">Download</ons-toolbar-button>
-                </div>
-            </ons-toolbar>
+            ${this._render_onsToolbar()}
             <div class="content">
-                <img src="${this._titleImage}" 
-                    style="width:100%"
-                    @click="${this._onTitleImageClick}">
-                <ons-card class="ul">
-                    ${this._renderSubtitle()}
-                    ${this._renderBeschreibung()}
-                </ons-card>
-                <ons-list-title>Informationen</ons-list-title>
-                <ons-list>
-                    ${Object.keys(this._items).map(key => this._renderInformationenOnsListItem(this._items[key]))}
-                    <ons-list-item>
-                        <div class="right">
-                            <ons-button modifier="large--quiet"
-                                @click="${this._onAddItemClick}">add item</ons-button>
-                        </div>
-                    </ons-list-item>
-                </ons-list>
+                ${this._render_onsCard()}
+                ${this._render_onsList_stammdaten()}
+                ${this._render_onsList_informationen()}
+                ${this._render_vorschau()}                
             </div>
-            ${this._renderFormInputs()}
         </ons-page>
-
-        <ons-modal direction="up">
-            <list-item-configurator 
-                @zurueckClick="${this._onListItemConfiguratorZurueckClick}"
-                @fertigClick="${this._onListItemConfiguratorFertigClick}"
-                @entfernenClick="${this._onListItemConfiguratorEntfernenClick}"></list-item-configurator>
-        </ons-modal>
         `;
+    }
+
+    setOnsListItemData(data) {
+        this._onsListItemData = data;
+    }
+
+    _onInformationsEintragClick(item) {
+        document.querySelector('ons-navigator')
+            .pushPage('list-item-configurator.html')
+            .then(x => {
+                const listItemConfigurator = x.querySelector('list-item-configurator');
+                listItemConfigurator.addEventListener('fertigClick', (e) => {
+                    const item = e.detail.item;
+                    this._items[item.key] = item;
+                    document.querySelector('ons-navigator').popPage();
+                    this.requestUpdate();
+                });
+                listItemConfigurator.setItem(item, true);
+            });
+    }
+
+    _onNeuerInformationsEintragClick() {
+        document.querySelector('ons-navigator')
+            .pushPage('list-item-configurator.html')
+            .then(x => {
+                const listItemConfigurator = x.querySelector('list-item-configurator');
+                listItemConfigurator.addEventListener('fertigClick', (e) => {
+                    const item = e.detail.item;
+                    this._items[item.key] = item;
+                    document.querySelector('ons-navigator').popPage();
+                    this.requestUpdate();
+                });
+
+                listItemConfigurator.setItem({
+                    key: this._uuidv4(),
+                    left: '',
+                    title: '',
+                    subtitle: '',
+                    right: ''
+                }, false);
+
+            });
     }
 
     _onDownloadClick() {
         const data = {
-            kategorie: this._kategorie,
-
-            thumbnail: this._titleImage,
-            title: this._titel,
-            subtitle: this._subtitle,
-            titleImage: this._titleImage,
-            beschreibung: this._beschreibung,
-            informationen: this._items
+            onsListItemData: this._onsListItemData,
+            pageData: {
+                titelbildSrc: this._titleImage,
+                titel: this._subtitle,
+                beschreibung: this._beschreibung,
+                informationen: this._items
+            }
         };
 
         var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(data));
@@ -191,75 +280,6 @@ export default class AddItem_1_Page extends connect(store)(LitElement) {
         document.body.appendChild(downloadAnchorNode); // required for firefox
         downloadAnchorNode.click();
         downloadAnchorNode.remove();
-    }
-
-    _onAddItemClick() {
-        
-
-
-
-        const listItemConfigurator = this.querySelector('list-item-configurator'),
-            onsModal = this.querySelector('ons-modal');
-        listItemConfigurator.setItem({
-            key: this._uuidv4(),
-            left: '',
-            title: '',
-            subtitle: '',
-            right: ''
-        }, false);
-        onsModal.show();
-    }
-
-    _onListItemConfiguratorEntfernenClick(event) {
-        delete this._items[event.detail.key];// = undefined;
-
-        this.querySelector('ons-modal').hide();
-        this.requestUpdate();
-    }
-
-    _onListItemConfiguratorFertigClick() {
-        const listItemConfigurator = this.querySelector('list-item-configurator'),
-            onsModal = this.querySelector('ons-modal'),
-            item = listItemConfigurator.getItem();
-        this._items[item.key] = item;
-        onsModal.hide();
-        this.requestUpdate();
-    }
-
-    _onListItemConfiguratorZurueckClick(e) {
-        this.querySelector('ons-modal')
-            .hide();
-    }
-
-    _onTitleImageClick() {
-        this.querySelector('input#titleImage').click();
-    }
-
-    _onTitleImageChange(event) {
-        const src = event.srcElement,
-            file = src.files[0];
-        if (!file) return;
-
-        const reader = new FileReader(),
-            _this = this;
-        reader.onload = (e) => _this._titleImage = e.target.result;
-        reader.readAsDataURL(file);
-    }
-
-    _onSubtitleClick() {
-        this._subtitleActive = true;
-    }
-
-    _onSubtitleInputBlur() {
-        this._subtitleActive = false;
-    }
-
-    _onBeschreibungClick() {
-        this._beschreibungActive = true;
-    }
-
-    _onBeschreibungInputBlur() {
-        this._beschreibungActive = false;
     }
 
     _onOnsListItemClick(item) {

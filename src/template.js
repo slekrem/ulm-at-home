@@ -80,3 +80,12 @@ export const renderItemExportPage = () => html`
     </ons-page>
 </template>
 `;
+
+import './pages/list-item-configurator';
+export const renderListItemConfigurator = () => html`
+<template id="list-item-configurator.html">
+    <ons-page>
+        <list-item-configurator></list-item-configurator>
+    </ons-page>
+</template>
+`;

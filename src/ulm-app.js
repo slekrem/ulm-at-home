@@ -4,7 +4,8 @@ import { LitElement, html } from "lit-element";
 
 import {
     renderKategorienPage,
-    renderDetail1Page
+    renderDetail1Page,
+    renderListItemConfigurator
 } from "./template";
 
 import app from './redux/reducers/app';
@@ -32,6 +33,7 @@ export default class UlmApp extends connect(store)(LitElement) {
 
         ${renderKategorienPage()}
         ${renderDetail1Page()}
+        ${renderListItemConfigurator()}
         `;
     }
 }

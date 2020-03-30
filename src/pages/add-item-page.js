@@ -1,4 +1,3 @@
-
 import { connect } from "pwa-helpers";
 import { store } from "../redux/store";
 import { LitElement, html } from "lit-element";
@@ -22,8 +21,50 @@ export default class AddItemPage extends connect(store)(LitElement) {
         this._thumbnailSrc = 'https://via.placeholder.com/40x40';
     }
 
-    _renderKategorieOnsListItem() {
+    _render_onsToolbar() {
         return html`
+        <ons-toolbar>
+            <div class="left">
+                <ons-back-button>Zurück</ons-back-button>
+            </div>
+            <div class="center">Neuer Eintrag</div>
+            <div class="right">
+                <ons-toolbar-button @click="${this._onWeiterClick}">Weiter</ons-toolbar-button>
+            </div>
+        </ons-toolbar>
+        `;
+    }
+
+    _render_onsCard() {
+        return html`
+        <ons-card>
+            <h1>Lorem ipsum</h1>
+            <p>
+                Lorem ipsum dolor sit amet, consetetur sadipscing elitr,
+                sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam
+            </p>
+        </ons-card>
+        `;
+    }
+
+    _render_onsList_stammdaten() {
+        const onBildAuswaelenClick = () => {
+            const input = document.createElement('input'),
+                reader = new FileReader();
+            input.setAttribute('type', 'file');
+            input.setAttribute('accept', 'image/*');
+            input.onchange = (e) => {
+                const file = e.srcElement.files[0];
+                if (!file) return;
+                reader.onload = (e) => this._thumbnailSrc = e.target.result;
+                reader.readAsDataURL(file);
+            }
+            input.click();
+        };
+
+        return html`
+        <ons-list-title>Stammdaten</ons-list-title>
+        <ons-list>
             <ons-list-item>
                 <div class="center">Kategorie</div>
                 <div class="right">
@@ -35,11 +76,6 @@ export default class AddItemPage extends connect(store)(LitElement) {
                     </ons-select>
                 </div>
             </ons-list-item>
-            `;
-    }
-
-    _renderTitelOnsListItem() {
-        return html`
             <ons-list-item>
                 <div class="center">Titel</div>
                 <div class="right">
@@ -48,11 +84,6 @@ export default class AddItemPage extends connect(store)(LitElement) {
                         style="width: 167px;"></ons-input>
                 </div>
             </ons-list-item>
-            `;
-    }
-
-    _renderUntertitelOnsListItem() {
-        return html`
             <ons-list-item>
                 <div class="center">Untertitel</div>
                 <div class="right">
@@ -61,34 +92,31 @@ export default class AddItemPage extends connect(store)(LitElement) {
                         style="width: 167px;"></ons-input>
                 </div>
             </ons-list-item>
-            `;
-    }
-
-    _renderThumbnailOnsListItem() {
-        return html`
-        <ons-list-item>
-            <div class="center">Thumbnail</div>
-            <div class="right">
-                <ons-button modifier="large--quiet" @click="${this._onBildAuswaelenClick}">Bild auswählen</ons-button>
-                <input id="thumbnailImage" hidden type="file" accept="image/*" @change="${this._onThumbnailImageChange}" />
-            </div>
-        </ons-list-item>
+            <ons-list-item>
+                <div class="center">Thumbnail</div>
+                <div class="right">
+                    <ons-button modifier="large--quiet" 
+                        @click="${onBildAuswaelenClick}">Bild auswählen</ons-button>
+                </div>
+            </ons-list-item>
+        </ons-list>
         `;
     }
 
-    _renderVorschauOnsListItem() {
+    _render_vorschau() {
         return html`
-            <ons-list-item>
-                <ons-list-item modifier="chevron" tappable>
-                    <div class="left">
-                        <img class="list-item__thumbnail" src="${this._thumbnailSrc}">
-                    </div>
-                    <div class="center">
-                        <span class="list-item__title">${this._titel}</span>
-                        <span class="list-item__subtitle">${this._untertitel}</span>
-                    </div>
-                </ons-list-item>
+        <ons-list-title>Vorschau</ons-list-title>
+        <ons-list>
+            <ons-list-item modifier="chevron" tappable>
+                <div class="left">
+                    <img class="list-item__thumbnail" src="${this._thumbnailSrc}">
+                </div>
+                <div class="center">
+                    <span class="list-item__title">${this._titel}</span>
+                    <span class="list-item__subtitle">${this._untertitel}</span>
+                </div>
             </ons-list-item>
+        </ons-list>
         `;
     }
 
@@ -96,72 +124,42 @@ export default class AddItemPage extends connect(store)(LitElement) {
     render() {
         return html`
         <ons-page>
-            <ons-toolbar>
-                <div class="left">
-                    <ons-back-button>Zurück</ons-back-button>
-                </div>
-                <div class="center">Neuer Eintrag</div>
-                <div class="right">
-                    <ons-toolbar-button @click="${this._onWeiterClick}">Weiter</ons-toolbar-button>
-                </div>
-            </ons-toolbar>
+            ${this._render_onsToolbar()}
             <div class="content">
-                <ons-card>
-                    <h1>Lorem ipsum</h1>
-                    <p>
-                        Lorem ipsum dolor sit amet, consetetur sadipscing elitr, 
-                        sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam
-                    </p>
-                </ons-card>
-                <ons-list-title>Stammdaten</ons-list-title>
-                <ons-list>
-                    ${this._renderKategorieOnsListItem()}
-                    ${this._renderTitelOnsListItem()}
-                    ${this._renderUntertitelOnsListItem()}
-                    ${this._renderThumbnailOnsListItem()}
-                </ons-list>
-                <ons-list-title>Vorschau</ons-list-title>
-                <ons-list>
-                    ${this._renderVorschauOnsListItem()}
-                </ons-list>
+                ${this._render_onsCard()}
+                ${this._render_onsList_stammdaten()}
+                ${this._render_vorschau()}
             </div>
         </ons-page>
         `;
     }
 
-    _onThumbnailImageChange() {
-        const src = event.srcElement,
-            file = src.files[0];
-        if (!file) return;
-
-        const reader = new FileReader(),
-            _this = this;
-        reader.onload = (e) => _this._thumbnailSrc = e.target.result;
-        reader.readAsDataURL(file);
-    }
-
-    _onBildAuswaelenClick() {
-        this.querySelector('#thumbnailImage').click();
-    }
-
     _onWeiterClick() {
-        if (!this._titel) {
-            ons.notification.toast('Titel ist erforderlich!', { timeout: 2000 });
-            return;
-        }
         if (!this._kategorie) {
             ons.notification.toast('Kategorie ist erforderlich!', { timeout: 2000 });
             return;
         }
-
+        if (!this._titel) {
+            ons.notification.toast('Titel ist erforderlich!', { timeout: 2000 });
+            return;
+        }
+        if (!this._untertitel) {
+            ons.notification.toast('Untertitel ist erforderlich!', { timeout: 2000 });
+            return;
+        }
+        if (!this._thumbnailSrc) {
+            ons.notification.toast('Thumbnail ist erforderlich!', { timeout: 2000 });
+            return;
+        }
 
         document.querySelector('ons-navigator')
             .pushPage('add-item-1-page.html')
-            .then(x => {
-                const addItem1Page = x.querySelector('add-item-1-page');
-                addItem1Page.setTitel(this._titel);
-                addItem1Page.setKategorie(this._kategorie);
-            });
+            .then(x => x.querySelector('add-item-1-page')
+                .setOnsListItemData({
+                    titel: this._titel,
+                    untertitel: this._untertitel,
+                    thumbnailSrc: this._thumbnailSrc,
+                }));
     }
 }
 customElements.define(AddItemPage.is, AddItemPage);
