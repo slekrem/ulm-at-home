@@ -89,3 +89,12 @@ export const renderListItemConfigurator = () => html`
     </ons-page>
 </template>
 `;
+
+import './pages/data-page';
+export const renderDataPage = () => html`
+<template id="data-page.html">
+    <ons-page>
+        <data-page></data-page>
+    </ons-page>
+</template>
+`;

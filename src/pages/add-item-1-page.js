@@ -9,6 +9,7 @@ import {
     render_onsListItem_url,
     render_onsListItem_vorschaubilderUndTitel
 } from "../ons-components/ons-components";
+import { addFreizeitItem } from "../redux/actions/app";
 
 export default class AddItem_1_Page extends connect(store)(LitElement) {
     static get is() { return 'add-item-1-page'; }
@@ -44,7 +45,7 @@ export default class AddItem_1_Page extends connect(store)(LitElement) {
             </div>
             <div class="center">${this._titel}</div>
             <div class="right">
-                <ons-toolbar-button @click="${this._onDownloadClick}">Download</ons-toolbar-button>
+                <ons-toolbar-button @click="${this._onFertigClick}">Fertig</ons-toolbar-button>
             </div>
         </ons-toolbar>
         `;
@@ -262,7 +263,7 @@ export default class AddItem_1_Page extends connect(store)(LitElement) {
             });
     }
 
-    _onDownloadClick() {
+    _onFertigClick() {
         const data = {
             onsListItemData: this._onsListItemData,
             pageData: {
@@ -272,11 +273,24 @@ export default class AddItem_1_Page extends connect(store)(LitElement) {
                 informationen: this._items
             }
         };
+        switch (data.onsListItemData.kategorie) {
+            case 'freizeit':
+                store.dispatch(addFreizeitItem(data));
+                break;
+            default:
+                console.error('');
+        }
+
+        document.querySelector('ons-navigator')
+            .resetToPage('kategorien-page.html');
+
+
+        return;
 
         var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(data));
         var downloadAnchorNode = document.createElement('a');
         downloadAnchorNode.setAttribute("href", dataStr);
-        downloadAnchorNode.setAttribute("download", this._titel + ".json");
+        downloadAnchorNode.setAttribute("download", data.onsListItemData.titel + ".json");
         document.body.appendChild(downloadAnchorNode); // required for firefox
         downloadAnchorNode.click();
         downloadAnchorNode.remove();

@@ -2,6 +2,7 @@ import { connect } from "pwa-helpers";
 import { store } from "../redux/store";
 import { LitElement, html } from "lit-element";
 import { setFreizeitItem } from "../redux/actions/app";
+import { render_appPreviewListItem } from "../ons-components/app-components";
 
 export default class FreizeitPage extends connect(store)(LitElement) {
     static get is() { return 'freizeit-page'; }
@@ -14,20 +15,6 @@ export default class FreizeitPage extends connect(store)(LitElement) {
     constructor() {
         super();
         this._freizeitOnsListData = [];
-    }
-
-    _renderOnsListItem(item) {
-        return html`
-            <ons-list-item modifier="chevron" tappable @click="${() => this._onOnsListItemClick(item)}">
-                <div class="left">
-                    <img class="list-item__thumbnail" src="${item.thumbnail}">
-                </div>
-                <div class="center">
-                    <span class="list-item__title">${item.title}</span>
-                    <span class="list-item__subtitle">${item.subtitle}</span>
-                </div>
-            </ons-list-item>
-            `;
     }
 
     createRenderRoot() { return this; }
@@ -46,7 +33,14 @@ export default class FreizeitPage extends connect(store)(LitElement) {
                 </ons-card>
                 <ons-list-title>&nbsp;</ons-list-title>
                 <ons-list>
-                    ${this._freizeitOnsListData.map(item => this._renderOnsListItem(item))}
+                    ${this._freizeitOnsListData.map(item =>
+            render_appPreviewListItem({
+                item: item,
+                title: item.onsListItemData.titel,
+                subtitle: item.onsListItemData.untertitel,
+                thumbnailSrc: item.onsListItemData.thumbnailSrc,
+                onClick: this._onOnsListItemClick
+            }))}
                 </ons-list>
             </div>
         </ons-page>

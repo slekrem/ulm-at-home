@@ -8,7 +8,8 @@ import {
     renderInfosPage,
     renderAddItemPage,
     renderAddItem_1_Page,
-    renderItemExportPage
+    renderItemExportPage,
+    renderDataPage
 } from "../template";
 import { setKategorie } from "../redux/actions/app";
 
@@ -47,6 +48,7 @@ export default class KategorienPage extends connect(store)(LitElement) {
         ${renderAddItemPage()}
         ${renderAddItem_1_Page()}
         ${renderItemExportPage()}
+        ${renderDataPage()}
         `;
     }
 
@@ -56,7 +58,7 @@ export default class KategorienPage extends connect(store)(LitElement) {
 
     _onFaPlusClick() {
         document.querySelector('ons-navigator')
-            .pushPage('add-item-page.html');
+            .pushPage('data-page.html');
     }
 }
 customElements.define(KategorienPage.is, KategorienPage);

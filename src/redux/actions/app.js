@@ -21,3 +21,9 @@ export const setKulturItem = (payload) => (dispatch) => dispatch({
     type: SET_KULTUR_ITEM,
     payload: payload
 });
+
+export const ADD_FREIZEIT_ITEM = 'ADD_FREIZEIT_ITEM';
+export const addFreizeitItem = (payload) => (dispatch) => dispatch({
+    type: ADD_FREIZEIT_ITEM,
+    payload: payload
+});

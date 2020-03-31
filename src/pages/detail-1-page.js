@@ -2,6 +2,7 @@
 import { connect } from "pwa-helpers";
 import { store } from "../redux/store";
 import { LitElement, html } from "lit-element";
+import { render_app_page_content } from "../ons-components/app-components";
 
 export default class Detail1Page extends connect(store)(LitElement) {
     static get is() { return 'detail-1-page'; }
@@ -31,6 +32,7 @@ export default class Detail1Page extends connect(store)(LitElement) {
 
     createRenderRoot() { return this; }
     render() {
+        console.log('item', this._item);
         return html`
         <ons-page>
             <ons-toolbar>
@@ -40,15 +42,12 @@ export default class Detail1Page extends connect(store)(LitElement) {
                 <div class="center">${this._item.title}</div>
             </ons-toolbar>
             <div class="content">
-                <img src="${this._item.titleImage}" style="width:100%">
-                <ons-card class="ul">
-                    <h1>${this._item.subtitle}</h1>
-                    <p>${this._item.beschreibung}</p>
-                </ons-card>
-                <ons-list-title>Informationen</ons-list-title>
-                <ons-list>
-                    ${Object.keys(this._item.informationen).map(key => this._renderInformationenOnsListItem(this._item.informationen[key]))}
-                </ons-list>
+                ${render_app_page_content({
+            titel: this._item.pageData.titel,
+            titelbildSrc: this._item.pageData.titelbildSrc,
+            beschreibung: this._item.pageData.beschreibung,
+            informationen: this._item.pageData.informationen
+        })}
             </div>
         </ons-page>
         `;

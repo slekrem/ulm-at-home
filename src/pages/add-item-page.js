@@ -68,7 +68,9 @@ export default class AddItemPage extends connect(store)(LitElement) {
             <ons-list-item>
                 <div class="center">Kategorie</div>
                 <div class="right">
-                    <ons-select class="ul" @change="${e => this._kategorie = e.srcElement.value}">
+                    <ons-select class="ul" 
+                        value="${this._kategorie}"
+                        @change="${e => this._kategorie = e.srcElement.value}">
                         <option value="freizeit">Freizeit</option>
                         <option value="lieferdienste">Lieferdienste</option>
                         <option value="kultur">Kultur</option>
@@ -80,6 +82,7 @@ export default class AddItemPage extends connect(store)(LitElement) {
                 <div class="center">Titel</div>
                 <div class="right">
                     <ons-input placeholder="Titel"
+                        value="${this._titel}"
                         @change="${e => this._titel = e.srcElement.value}"
                         style="width: 167px;"></ons-input>
                 </div>
@@ -88,6 +91,7 @@ export default class AddItemPage extends connect(store)(LitElement) {
                 <div class="center">Untertitel</div>
                 <div class="right">
                     <ons-input placeholder="Untertitel"
+                        value="${this._untertitel}"
                         @change="${e => this._untertitel = e.srcElement.value}"
                         style="width: 167px;"></ons-input>
                 </div>
@@ -156,6 +160,7 @@ export default class AddItemPage extends connect(store)(LitElement) {
             .pushPage('add-item-1-page.html')
             .then(x => x.querySelector('add-item-1-page')
                 .setOnsListItemData({
+                    kategorie: this._kategorie,
                     titel: this._titel,
                     untertitel: this._untertitel,
                     thumbnailSrc: this._thumbnailSrc,
