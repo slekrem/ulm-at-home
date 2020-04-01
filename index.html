@@ -73,6 +73,23 @@
 </head>
 
 <body>
+    <script src="https://www.gstatic.com/firebasejs/7.13.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.13.1/firebase-analytics.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.13.1/firebase-storage.js"></script>
+    <script>
+        var firebaseConfig = {
+            apiKey: "AIzaSyBrLWkjaqDx7f-LHYgczHB-nvCr8MrGkY8",
+            authDomain: "ulm-app.firebaseapp.com",
+            databaseURL: "https://ulm-app.firebaseio.com",
+            projectId: "ulm-app",
+            storageBucket: "ulm-app.appspot.com",
+            messagingSenderId: "212643818110",
+            appId: "1:212643818110:web:f946b38e27ff69883d062f",
+            measurementId: "G-B8SQLWP76M"
+        };
+        firebase.initializeApp(firebaseConfig);
+        firebase.analytics();
+    </script>
     <ulm-app></ulm-app>
     <noscript>
         Please enable JavaScript to view this website.

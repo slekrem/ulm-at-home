@@ -45,7 +45,6 @@ export const render_app_page_content = ({
         ${Object.keys(informationen)
             .map(key => {
                 const item = informationen[key];
-                console.log(item.vorlage, item);
                 switch (item.vorlage) {
                     case 'Standard':
                         return html`

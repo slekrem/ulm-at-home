@@ -6,15 +6,21 @@ import {
     ADD_FREIZEIT_ITEM
 } from "../actions/app";
 
-const INITIAL_STATE = {
+let ulmAppState = undefined;
+if (localStorage) {
+    const item = localStorage.getItem('ulm-app-state');
+    if (item)
+        ulmAppState = JSON.parse(item);
+}
+
+const INITIAL_STATE = ulmAppState || {
+    kategorie: '',
 
     freizeitOnsListData: [],
     lieferdiensteOnsListData: [],
     kulturOnsListData: [],
     infosOnsListData: [],
 
-    kategorie: '',
-    
     freizeitItem: {},
     lieferdiensteItem: {},
     kulturItem: {},
@@ -24,36 +30,48 @@ const INITIAL_STATE = {
 const app = (state = INITIAL_STATE, action) => {
     switch (action.type) {
         case SET_KATEGORIE:
-            return {
+            state = {
                 ...state,
                 kategorie: action.payload
             };
+            break;
         case SET_FREIZEIT_ITEM:
-            return {
+            state = {
                 ...state,
                 freizeitItem: action.payload
             };
+            break;
         case SET_LIEFERDIENSTE_ITEM:
-            return {
+            state = {
                 ...state,
                 lieferdiensteItem: action.payload
             };
+            break;
         case SET_KULTUR_ITEM:
-            return {
+            state = {
                 ...state,
                 kulturItem: action.payload
             };
+            break;
         case ADD_FREIZEIT_ITEM:
-            return {
+            state = {
                 ...state,
                 freizeitOnsListData: [
                     ...state.freizeitOnsListData,
                     action.payload
                 ]
             };
+            break;
         default:
-            return state;
+            break;
     }
+
+    if (localStorage) {
+        console.log(state);
+        localStorage.setItem('ulm-app-state', JSON.stringify(state))
+    }
+
+    return state;
 };
 
 export default app;

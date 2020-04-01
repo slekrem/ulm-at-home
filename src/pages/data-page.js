@@ -22,9 +22,9 @@ export default class DataPage extends connect(store)(LitElement) {
             <div class="left">
                 <ons-back-button>Zurück</ons-back-button>
             </div>
-            <div class="center">Account</div>
+            <div class="center">Datenbank</div>
             <div class="right">
-                <ons-toolbar-button @click="${this._onNeuerEintragClick}">+</ons-toolbar-button>
+                <ons-toolbar-button icon="fa-plus" @click="${this._onNeuerEintragClick}"></ons-toolbar-button>
             </div>
         </ons-toolbar>
         `;

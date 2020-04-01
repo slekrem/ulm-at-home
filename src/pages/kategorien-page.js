@@ -22,16 +22,22 @@ export default class KategorienPage extends connect(store)(LitElement) {
         store.dispatch(setKategorie(0));
     }
 
+    _render_onsToolbar() { 
+        return html`
+        <ons-toolbar>
+            <div class="center">ULM@home</div>
+            <div class="right">
+                <ons-toolbar-button icon="fa-database" @click="${this._onFaDatabaseClick}"></ons-toolbar-button>
+            </div>
+        </ons-toolbar>
+        `;
+    }
+
     createRenderRoot() { return this; }
     render() {
         return html`
         <ons-page>
-            <ons-toolbar>
-                <div class="center">ULM@home</div>
-                <div class="right">
-                    <ons-toolbar-button icon="fa-plus" @click="${this._onFaPlusClick}"></ons-toolbar-button>
-                </div>
-            </ons-toolbar>
+            ${this._render_onsToolbar()}
             <ons-tabbar @prechange="${this._onTabbarPrechange}">
                 <ons-tab page="freizeit-page.html" label="Freizeit" icon="fa-clock" active></ons-tab>
                 <ons-tab page="lieferdienste-page.html" label="Lieferdienste" icon="fa-truck"></ons-tab>
@@ -52,11 +58,11 @@ export default class KategorienPage extends connect(store)(LitElement) {
         `;
     }
 
-    _onTabbarPrechange(event) { 
+    _onTabbarPrechange(event) {
         store.dispatch(setKategorie(event.index));
     }
 
-    _onFaPlusClick() {
+    _onFaDatabaseClick() {
         document.querySelector('ons-navigator')
             .pushPage('data-page.html');
     }

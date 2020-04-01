@@ -17,6 +17,8 @@ export default class AddItem_1_Page extends connect(store)(LitElement) {
         return {
             _onsListItemData: Object,
 
+            _titelbild_fileName: String,
+
             _titel: String,
             _titleImage: String,
             _subtitle: String,
@@ -30,6 +32,7 @@ export default class AddItem_1_Page extends connect(store)(LitElement) {
         super();
         this._onsListItemData = {};
 
+        this._titelbild_fileName = '';
         this._titel = '';
         this._titleImage = 'https://via.placeholder.com/800x600';
         this._subtitle = '';
@@ -72,7 +75,10 @@ export default class AddItem_1_Page extends connect(store)(LitElement) {
             input.onchange = (e) => {
                 const file = e.srcElement.files[0];
                 if (!file) return;
-                reader.onload = (e) => this._titleImage = e.target.result;
+                reader.onload = (e) => {
+                    this._titleImage = e.target.result;
+                    this._titelbild_fileName = file.name;
+                };
                 reader.readAsDataURL(file);
             }
             input.click();
@@ -273,6 +279,41 @@ export default class AddItem_1_Page extends connect(store)(LitElement) {
                 informationen: this._items
             }
         };
+
+        this._upload_titelbild({
+            titelbild_dataUrl: data.pageData.titelbildSrc,
+            titelbild_fileName: this._titelbild_fileName,
+            onDownloadURL: (titelbildDwnloadUrl) => {
+                this._upload_thumbnail({
+                    //thumbnail_dataUrl: data.onsListItemData.
+                });
+            }
+        });
+        return;
+
+
+        // Create a reference to 'mountains.jpg'
+        var mountainsRef = storageRef.child('mountains.jpg');
+
+        // Create a reference to 'images/mountains.jpg'
+        var mountainImagesRef = storageRef.child('images/mountains.jpg');
+
+        // While the file names are the same, the references point to different files
+        mountainsRef.name === mountainImagesRef.name            // true
+        mountainsRef.fullPath === mountainImagesRef.fullPath
+
+
+
+
+
+
+
+
+
+
+
+
+
         switch (data.onsListItemData.kategorie) {
             case 'freizeit':
                 store.dispatch(addFreizeitItem(data));
@@ -301,6 +342,109 @@ export default class AddItem_1_Page extends connect(store)(LitElement) {
             onsModal = this.querySelector('ons-modal');
         listItemConfigurator.setItem(item, true);
         onsModal.show();
+    }
+
+    _upload_titelbild({
+        titelbild_fileName,
+        titelbild_dataUrl,
+        onDownloadURL
+    }) {
+        const storageRef = firebase.storage().ref(),
+            ref = storageRef.child('titelbilder/' + titelbild_fileName),
+            uploadTask = ref.putString(titelbild_dataUrl, 'data_url');
+        uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED,
+            (snapshot) => {
+                const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                console.log('Upload is ' + progress + '% done');
+                switch (snapshot.state) {
+                    case firebase.storage.TaskState.PAUSED:
+                        console.log('Upload is paused');
+                        break;
+                    case firebase.storage.TaskState.RUNNING:
+                        console.log('Upload is running');
+                        break;
+                    default:
+                        break;
+                }
+            }, (error) => {
+                console.error(error);
+                switch (error.code) {
+                    case 'storage/unauthorized':
+                        break;
+                    case 'storage/canceled':
+                        break;
+                    case 'storage/unknown':
+                        break;
+                }
+            }, () => uploadTask.snapshot.ref.getDownloadURL()
+                .then((downloadURL) => onDownloadURL(downloadURL))
+        );
+    }
+
+    _upload_thumbnail({
+        thumbnail_fileName,
+        thumbnail_dataUrl,
+        onDownloadURL
+    }) {
+        const storageRef = firebase.storage().ref(),
+            ref = storageRef.child('thumbnails/' + thumbnail_fileName),
+            uploadTask = ref.putString(thumbnail_dataUrl, 'data_url');
+        uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED,
+            (snapshot) => {
+                const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                console.log('Upload is ' + progress + '% done');
+                switch (snapshot.state) {
+                    case firebase.storage.TaskState.PAUSED:
+                        console.log('Upload is paused');
+                        break;
+                    case firebase.storage.TaskState.RUNNING:
+                        console.log('Upload is running');
+                        break;
+                    default:
+                        break;
+                }
+            }, (error) => {
+                console.error(error);
+                switch (error.code) {
+                    case 'storage/unauthorized':
+                        break;
+                    case 'storage/canceled':
+                        break;
+                    case 'storage/unknown':
+                        break;
+                }
+            }, () => uploadTask.snapshot.ref.getDownloadURL()
+                .then((downloadURL) => onDownloadURL(downloadURL))
+        );
+    }
+
+    _upload_file({
+        child,
+        fileName,
+        dataUrl,
+        onProgress,
+        onError,
+        onDownloadURL
+    }) {
+        const uuidv4 = () => {
+            return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'
+                .replace(/[xy]/g, (c) => {
+                    var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+                    return v.toString(16);
+                });
+        },
+            storageRef = firebase.storage().ref(),
+            ref = storageRef.child(`${child}${uuidv4()}-${fileName}`),
+            uploadTask = ref.putString(dataUrl, 'data_url');
+        uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED,
+            (snapshot) => {
+                const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                if (onProgress) onProgress(progress);
+            }, (error) => {
+                if (onError) onError(error);
+            }, () => uploadTask.snapshot.ref.getDownloadURL()
+                .then((downloadURL) => { if (onDownloadURL) onDownloadURL(downloadURL); })
+        );
     }
 
     _uuidv4() {
