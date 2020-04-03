@@ -3,7 +3,8 @@ import {
     SET_KATEGORIE,
     SET_LIEFERDIENSTE_ITEM,
     SET_KULTUR_ITEM,
-    ADD_FREIZEIT_ITEM
+    ADD_FREIZEIT_ITEM,
+    SET_FREIZEIT_ITEMS
 } from "../actions/app";
 
 let ulmAppState = undefined;
@@ -15,6 +16,7 @@ if (localStorage) {
 
 const INITIAL_STATE = ulmAppState || {
     kategorie: '',
+    freizeitItems: {},
 
     freizeitOnsListData: [],
     lieferdiensteOnsListData: [],
@@ -33,6 +35,12 @@ const app = (state = INITIAL_STATE, action) => {
             state = {
                 ...state,
                 kategorie: action.payload
+            };
+            break;
+        case SET_FREIZEIT_ITEMS:
+            state = {
+                ...state,
+                freizeitItems: action.payload
             };
             break;
         case SET_FREIZEIT_ITEM:
@@ -67,7 +75,6 @@ const app = (state = INITIAL_STATE, action) => {
     }
 
     if (localStorage) {
-        console.log(state);
         localStorage.setItem('ulm-app-state', JSON.stringify(state))
     }
 

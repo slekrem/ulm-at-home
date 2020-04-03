@@ -2,13 +2,20 @@
 import { connect } from "pwa-helpers";
 import { store } from "../redux/store";
 import { LitElement, html } from "lit-element";
+import { setFreizeitItems } from "../redux/actions/app";
 
 export default class WillkommenPage extends connect(store)(LitElement) {
     static get is() { return 'willkommen-page'; }
-    static get properties() { return {} }
+    static get properties() { return {}; }
 
     constructor() {
         super();
+        var database = firebase.database();
+
+        var freizeitItemsRef = database.ref('freizeitItems/');
+        freizeitItemsRef.on('value', (snapshot) => {
+            store.dispatch(setFreizeitItems(snapshot.val()))
+        });
     }
 
     createRenderRoot() { return this; }

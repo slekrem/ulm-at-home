@@ -32,7 +32,6 @@ export default class Detail1Page extends connect(store)(LitElement) {
 
     createRenderRoot() { return this; }
     render() {
-        console.log('item', this._item);
         return html`
         <ons-page>
             <ons-toolbar>
@@ -67,7 +66,6 @@ export default class Detail1Page extends connect(store)(LitElement) {
             default:
                 break;
         }
-        console.log('asd', this._item);
     }
 }
 customElements.define(Detail1Page.is, Detail1Page);

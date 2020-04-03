@@ -52,7 +52,7 @@ export default class DataPage extends connect(store)(LitElement) {
                 thumbnailSrc: item.thumbnailSrc,
                 subtitle: item.subtitle,
                 title: item.title,
-                onClick: (x) => { console.log(x) },
+                onClick: () => { },
             }))}
         </ons-list>
         `;
@@ -73,7 +73,6 @@ export default class DataPage extends connect(store)(LitElement) {
 
     stateChanged(state) {
         this._freizeitOnsListData = state.app.freizeitOnsListData;
-        console.log(this._freizeitOnsListData);
     }
 
     _onNeuerEintragClick() {

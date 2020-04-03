@@ -9,7 +9,8 @@ export default class AddItemPage extends connect(store)(LitElement) {
             _kategorie: String,
             _titel: String,
             _untertitel: String,
-            _thumbnailSrc: String
+            _thumbnailSrc: String,
+            _thumbnail_fileName: String
         };
     }
 
@@ -19,6 +20,7 @@ export default class AddItemPage extends connect(store)(LitElement) {
         this._titel = '';
         this._untertitel = '';
         this._thumbnailSrc = 'https://via.placeholder.com/40x40';
+        this._thumbnail_fileName = '';
     }
 
     _render_onsToolbar() {
@@ -49,17 +51,7 @@ export default class AddItemPage extends connect(store)(LitElement) {
 
     _render_onsList_stammdaten() {
         const onBildAuswaelenClick = () => {
-            const input = document.createElement('input'),
-                reader = new FileReader();
-            input.setAttribute('type', 'file');
-            input.setAttribute('accept', 'image/*');
-            input.onchange = (e) => {
-                const file = e.srcElement.files[0];
-                if (!file) return;
-                reader.onload = (e) => this._thumbnailSrc = e.target.result;
-                reader.readAsDataURL(file);
-            }
-            input.click();
+
         };
 
         return html`
@@ -100,7 +92,7 @@ export default class AddItemPage extends connect(store)(LitElement) {
                 <div class="center">Thumbnail</div>
                 <div class="right">
                     <ons-button modifier="large--quiet" 
-                        @click="${onBildAuswaelenClick}">Bild auswählen</ons-button>
+                        @click="${this._onBildAuswaelenClick}">Bild auswählen</ons-button>
                 </div>
             </ons-list-item>
         </ons-list>
@@ -126,6 +118,7 @@ export default class AddItemPage extends connect(store)(LitElement) {
 
     createRenderRoot() { return this; }
     render() {
+        console.log('render');
         return html`
         <ons-page>
             ${this._render_onsToolbar()}
@@ -164,7 +157,36 @@ export default class AddItemPage extends connect(store)(LitElement) {
                     titel: this._titel,
                     untertitel: this._untertitel,
                     thumbnailSrc: this._thumbnailSrc,
+                    thumbnail_fileName: this._thumbnail_fileName
                 }));
+    }
+
+    _onBildAuswaelenClick() {
+        console.log('bild auswählen click');
+        const input = document.createElement('input'),
+            reader = new FileReader();
+        input.setAttribute('type', 'file');
+        input.setAttribute('accept', 'image/*');
+        input.onchange = (e) => {
+            console.log('on input change: files', e.srcElement.files);
+            const file = e.srcElement.files[0];
+            console.log('file', file);
+            if (!file) return;
+            reader.onload = (e) => {
+                console.log('e', e);
+                this._thumbnailSrc = e.target.result;
+                this._thumbnail_fileName = file.name;
+            };
+            reader.onerror = (error) => {
+                console.log('error', error);
+            };
+            reader.readAsDataURL(file);
+            console.log('readAsDataURL', file);
+            reader.readAsDataURL(file);
+        }
+        document.body.appendChild(input);
+        input.click();
+        console.log('bild auswählen click fertig');
     }
 }
 customElements.define(AddItemPage.is, AddItemPage);

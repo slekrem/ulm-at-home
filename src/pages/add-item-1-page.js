@@ -280,61 +280,58 @@ export default class AddItem_1_Page extends connect(store)(LitElement) {
             }
         };
 
-        this._upload_titelbild({
-            titelbild_dataUrl: data.pageData.titelbildSrc,
-            titelbild_fileName: this._titelbild_fileName,
-            onDownloadURL: (titelbildDwnloadUrl) => {
-                this._upload_thumbnail({
-                    //thumbnail_dataUrl: data.onsListItemData.
+        let titelbildDwnloadUrl,
+            thumbnailDownloadUrl;
+
+        this._upload_file({
+            child: 'titelbilder/',
+            dataUrl: data.pageData.titelbildSrc,
+            fileName: this._titelbild_fileName,
+            onProgress: (progress) => { },
+            onError: (error) => console.error(error),
+            onDownloadURL: (x) => {
+                titelbildDwnloadUrl = x;
+                this._upload_file({
+                    child: 'thumbnails/',
+                    dataUrl: data.onsListItemData.thumbnailSrc,
+                    fileName: data.onsListItemData.thumbnail_fileName,
+                    onProgress: (progress) => { },
+                    onError: (error) => { },
+                    onDownloadURL: (y) => {
+                        thumbnailDownloadUrl = y;
+                        let kategorieChild = 'unknownItems';
+                        switch (data.onsListItemData.kategorie) {
+                            case 'freizeit':
+                                kategorieChild = 'freizeitItems';
+                                break;
+                            default:
+                                break;
+                        }
+
+                        const key = firebase.database().ref().child(kategorieChild).push().key;
+                        firebase.database().ref(kategorieChild + '/' + key)
+                            .set({
+                                listItemData: {
+                                    thumbnailSrc: thumbnailDownloadUrl,
+                                    titel: data.onsListItemData.titel,
+                                    untertitel: data.onsListItemData.untertitel
+                                },
+                                pageData: {
+                                    titelbildSrc: titelbildDwnloadUrl,
+                                    titel: data.pageData.titel,
+                                    beschreibung: data.pageData.beschreibung,
+                                    informationen: data.pageData.informationen
+                                }
+                            })
+                            .then(x => {
+                                document.querySelector('ons-navigator')
+                                    .resetToPage('kategorien-page.html');
+                            })
+                            .catch(y => { });
+                    }
                 });
             }
         });
-        return;
-
-
-        // Create a reference to 'mountains.jpg'
-        var mountainsRef = storageRef.child('mountains.jpg');
-
-        // Create a reference to 'images/mountains.jpg'
-        var mountainImagesRef = storageRef.child('images/mountains.jpg');
-
-        // While the file names are the same, the references point to different files
-        mountainsRef.name === mountainImagesRef.name            // true
-        mountainsRef.fullPath === mountainImagesRef.fullPath
-
-
-
-
-
-
-
-
-
-
-
-
-
-        switch (data.onsListItemData.kategorie) {
-            case 'freizeit':
-                store.dispatch(addFreizeitItem(data));
-                break;
-            default:
-                console.error('');
-        }
-
-        document.querySelector('ons-navigator')
-            .resetToPage('kategorien-page.html');
-
-
-        return;
-
-        var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(data));
-        var downloadAnchorNode = document.createElement('a');
-        downloadAnchorNode.setAttribute("href", dataStr);
-        downloadAnchorNode.setAttribute("download", data.onsListItemData.titel + ".json");
-        document.body.appendChild(downloadAnchorNode); // required for firefox
-        downloadAnchorNode.click();
-        downloadAnchorNode.remove();
     }
 
     _onOnsListItemClick(item) {
@@ -355,13 +352,10 @@ export default class AddItem_1_Page extends connect(store)(LitElement) {
         uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED,
             (snapshot) => {
                 const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                console.log('Upload is ' + progress + '% done');
                 switch (snapshot.state) {
                     case firebase.storage.TaskState.PAUSED:
-                        console.log('Upload is paused');
                         break;
                     case firebase.storage.TaskState.RUNNING:
-                        console.log('Upload is running');
                         break;
                     default:
                         break;
@@ -392,13 +386,10 @@ export default class AddItem_1_Page extends connect(store)(LitElement) {
         uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED,
             (snapshot) => {
                 const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                console.log('Upload is ' + progress + '% done');
                 switch (snapshot.state) {
                     case firebase.storage.TaskState.PAUSED:
-                        console.log('Upload is paused');
                         break;
                     case firebase.storage.TaskState.RUNNING:
-                        console.log('Upload is running');
                         break;
                     default:
                         break;
@@ -436,14 +427,11 @@ export default class AddItem_1_Page extends connect(store)(LitElement) {
             storageRef = firebase.storage().ref(),
             ref = storageRef.child(`${child}${uuidv4()}-${fileName}`),
             uploadTask = ref.putString(dataUrl, 'data_url');
+
         uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED,
-            (snapshot) => {
-                const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                if (onProgress) onProgress(progress);
-            }, (error) => {
-                if (onError) onError(error);
-            }, () => uploadTask.snapshot.ref.getDownloadURL()
-                .then((downloadURL) => { if (onDownloadURL) onDownloadURL(downloadURL); })
+            (snapshot) => { if (onProgress) onProgress((snapshot.bytesTransferred / snapshot.totalBytes) * 100); },
+            (error) => { if (onError) onError(error); },
+            () => uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => { if (onDownloadURL) onDownloadURL(downloadURL); })
         );
     }
 

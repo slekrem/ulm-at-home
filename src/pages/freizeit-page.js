@@ -8,13 +8,13 @@ export default class FreizeitPage extends connect(store)(LitElement) {
     static get is() { return 'freizeit-page'; }
     static get properties() {
         return {
-            _freizeitOnsListData: []
+            _freizeitOnsListData: Object
         };
     }
 
     constructor() {
         super();
-        this._freizeitOnsListData = [];
+        this._freizeitOnsListData = {};
     }
 
     createRenderRoot() { return this; }
@@ -33,14 +33,17 @@ export default class FreizeitPage extends connect(store)(LitElement) {
                 </ons-card>
                 <ons-list-title>&nbsp;</ons-list-title>
                 <ons-list>
-                    ${this._freizeitOnsListData.map(item =>
-            render_appPreviewListItem({
-                item: item,
-                title: item.onsListItemData.titel,
-                subtitle: item.onsListItemData.untertitel,
-                thumbnailSrc: item.onsListItemData.thumbnailSrc,
-                onClick: this._onOnsListItemClick
-            }))}
+                    ${Object.keys(this._freizeitOnsListData)
+                .map(key => {
+                    const item = this._freizeitOnsListData[key];
+                    return render_appPreviewListItem({
+                        item: item,
+                        title: item.listItemData.titel,
+                        subtitle: item.listItemData.untertitel,
+                        thumbnailSrc: item.listItemData.thumbnailSrc,
+                        onClick: this._onOnsListItemClick
+                    })
+                })}
                 </ons-list>
             </div>
         </ons-page>
@@ -48,7 +51,7 @@ export default class FreizeitPage extends connect(store)(LitElement) {
     }
 
     stateChanged(state) {
-        this._freizeitOnsListData = state.app.freizeitOnsListData;
+        this._freizeitOnsListData = state.app.freizeitItems;
     }
 
     _onOnsListItemClick(item) {
