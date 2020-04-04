@@ -7,14 +7,7 @@ import {
     SET_FREIZEIT_ITEMS
 } from "../actions/app";
 
-let ulmAppState = undefined;
-if (localStorage) {
-    const item = localStorage.getItem('ulm-app-state');
-    if (item)
-        ulmAppState = JSON.parse(item);
-}
-
-const INITIAL_STATE = ulmAppState || {
+const INITIAL_STATE = {
     kategorie: '',
     freizeitItems: {},
 
@@ -73,11 +66,6 @@ const app = (state = INITIAL_STATE, action) => {
         default:
             break;
     }
-
-    if (localStorage) {
-        localStorage.setItem('ulm-app-state', JSON.stringify(state))
-    }
-
     return state;
 };
 

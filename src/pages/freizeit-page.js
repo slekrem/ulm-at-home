@@ -35,7 +35,12 @@ export default class FreizeitPage extends connect(store)(LitElement) {
                 <ons-list>
                     ${Object.keys(this._freizeitOnsListData)
                 .map(key => {
-                    const item = this._freizeitOnsListData[key];
+                    const item = {
+                        ...this._freizeitOnsListData[key],
+                        key: key,
+                        kategorie: 'freizeit',
+                    };
+
                     return render_appPreviewListItem({
                         item: item,
                         title: item.listItemData.titel,

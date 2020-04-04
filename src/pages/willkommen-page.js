@@ -14,7 +14,7 @@ export default class WillkommenPage extends connect(store)(LitElement) {
 
         var freizeitItemsRef = database.ref('freizeitItems/');
         freizeitItemsRef.on('value', (snapshot) => {
-            store.dispatch(setFreizeitItems(snapshot.val()))
+            store.dispatch(setFreizeitItems(snapshot.val() || {}))
         });
     }
 

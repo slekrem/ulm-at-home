@@ -8,6 +8,7 @@ export default class AddItemPage extends connect(store)(LitElement) {
     static get is() { return 'add-item-page'; }
     static get properties() {
         return {
+            _item: Object,
             _kategorie: String,
             _titel: String,
             _untertitel: String,
@@ -18,6 +19,7 @@ export default class AddItemPage extends connect(store)(LitElement) {
 
     constructor() {
         super();
+        this._item = {};
         this._kategorie = 'freizeit';
         this._titel = '';
         this._untertitel = '';
@@ -115,6 +117,15 @@ export default class AddItemPage extends connect(store)(LitElement) {
         `;
     }
 
+    _render_onsBottomToolbar() {
+        return html`
+        <ons-bottom-toolbar>
+            <ons-button modifier="large--quiet"
+                @click="${this._onEntfernenClick}">Entfernen</ons-button>
+        </ons-bottom-toolbar>
+        `;
+    }
+
     createRenderRoot() { return this; }
     render() {
         return html`
@@ -125,8 +136,17 @@ export default class AddItemPage extends connect(store)(LitElement) {
                 ${this._render_onsList_stammdaten()}
                 ${this._render_vorschau()}
             </div>
+            ${this._render_onsBottomToolbar()}
         </ons-page>
         `;
+    }
+
+    setItem(item, kategorie) {
+        this._item = item;
+        this._kategorie = kategorie;
+        this._titel = this._item.listItemData.titel;
+        this._untertitel = this._item.listItemData.untertitel;
+        this._thumbnailSrc = this._item.listItemData.thumbnailSrc;
     }
 
     _onWeiterClick() {
@@ -166,6 +186,31 @@ export default class AddItemPage extends connect(store)(LitElement) {
     _onThumbnailFileInputChange(event) {
         this._thumbnailSrc = event.detail.fileDataUrl;
         this._thumbnail_fileName = event.detail.fileName
+    }
+
+    _onEntfernenClick() {
+        const database = firebase.database();
+        ons.notification.confirm('Confirm!')
+            .then(x => {
+                if (x === 1) {
+                    let path = '';
+                    switch (this._item.kategorie) {
+                        case 'freizeit':
+                            path = 'freizeitItems/';
+                            break;
+                        default:
+                            console.error('', this._item);
+                            break;
+                    }
+                    let itemRef = database.ref(path + this._item.key);
+                    itemRef.remove()
+                        .then(() => {
+                            document.querySelector('ons-navigator')
+                                .resetToPage('kategorien-page.html');
+                        })
+                        .catch(console.error);
+                }
+            });
     }
 }
 customElements.define(AddItemPage.is, AddItemPage);

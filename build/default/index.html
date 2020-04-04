@@ -1497,7 +1497,7 @@ if(this._needsShimAdoptedStyleSheets){this._needsShimAdoptedStyleSheets=!1;this.
                 </ons-card>
                 <ons-list-title>&nbsp;</ons-list-title>
                 <ons-list>
-                    ${Object.keys(this._freizeitOnsListData).map(key=>{const item=this._freizeitOnsListData[key];return render_appPreviewListItem({item:item,title:item.listItemData.titel,subtitle:item.listItemData.untertitel,thumbnailSrc:item.listItemData.thumbnailSrc,onClick:this._onOnsListItemClick})})}
+                    ${Object.keys(this._freizeitOnsListData).map(key=>{const item={...this._freizeitOnsListData[key],key:key,kategorie:"freizeit"};return render_appPreviewListItem({item:item,title:item.listItemData.titel,subtitle:item.listItemData.untertitel,thumbnailSrc:item.listItemData.thumbnailSrc,onClick:this._onOnsListItemClick})})}
                 </ons-list>
             </div>
         </ons-page>
@@ -1615,7 +1615,7 @@ document.querySelector("ons-navigator").pushPage("detail-1-page.html")}}customEl
         `}stateChanged(state){switch(state.app.kategorie){case 0:this._item=state.app.freizeitItem;break;case 1:this._item=state.app.lieferdiensteItem;break;case 2:this._item=state.app.kulturItem;break;default:break;}}}customElements.define(Detail1Page.is,Detail1Page);class FileInput extends connect(store)(LitElement){static get is(){return"file-input"}static get properties(){return{fileDataUrl:{type:String/*reflect: true*/},fileName:String}}constructor(){super();this.fileName="";this.fileDataUrl=""}render(){return html`
         <input type="file" accept="image/*" hidden
             @change="${this._onInputChange}">
-        `}openFileDialog(){const input=this.shadowRoot.querySelector("input");input.click()}_onInputChange(changeEvent){const file=changeEvent.srcElement.files[0],reader=new FileReader;if(!file)return;reader.onload=loadEvent=>{this.fileDataUrl=loadEvent.target.result;this.fileName=file.name;let event=new CustomEvent("change",{detail:{fileDataUrl:loadEvent.target.result,fileName:file.name}});this.dispatchEvent(event)};reader.readAsDataURL(file)}}customElements.define(FileInput.is,FileInput);class AddItemPage extends connect(store)(LitElement){static get is(){return"add-item-page"}static get properties(){return{_kategorie:String,_titel:String,_untertitel:String,_thumbnailSrc:String,_thumbnail_fileName:String}}constructor(){super();this._kategorie="freizeit";this._titel="";this._untertitel="";this._thumbnailSrc="https://via.placeholder.com/40x40";this._thumbnail_fileName=""}_render_onsToolbar(){return html`
+        `}openFileDialog(){const input=this.shadowRoot.querySelector("input");input.click()}_onInputChange(changeEvent){const file=changeEvent.srcElement.files[0],reader=new FileReader;if(!file)return;reader.onload=loadEvent=>{this.fileDataUrl=loadEvent.target.result;this.fileName=file.name;let event=new CustomEvent("change",{detail:{fileDataUrl:loadEvent.target.result,fileName:file.name}});this.dispatchEvent(event)};reader.readAsDataURL(file)}}customElements.define(FileInput.is,FileInput);class AddItemPage extends connect(store)(LitElement){static get is(){return"add-item-page"}static get properties(){return{_item:Object,_kategorie:String,_titel:String,_untertitel:String,_thumbnailSrc:String,_thumbnail_fileName:String}}constructor(){super();this._item={};this._kategorie="freizeit";this._titel="";this._untertitel="";this._thumbnailSrc="https://via.placeholder.com/40x40";this._thumbnail_fileName=""}_render_onsToolbar(){return html`
         <ons-toolbar>
             <div class="left">
                 <ons-back-button>Zurück</ons-back-button>
@@ -1689,6 +1689,11 @@ document.querySelector("ons-navigator").pushPage("detail-1-page.html")}}customEl
                 </div>
             </ons-list-item>
         </ons-list>
+        `}_render_onsBottomToolbar(){return html`
+        <ons-bottom-toolbar>
+            <ons-button modifier="large--quiet"
+                @click="${this._onEntfernenClick}">Entfernen</ons-button>
+        </ons-bottom-toolbar>
         `}createRenderRoot(){return this}render(){return html`
         <ons-page>
             ${this._render_onsToolbar()}
@@ -1697,8 +1702,9 @@ document.querySelector("ons-navigator").pushPage("detail-1-page.html")}}customEl
                 ${this._render_onsList_stammdaten()}
                 ${this._render_vorschau()}
             </div>
+            ${this._render_onsBottomToolbar()}
         </ons-page>
-        `}_onWeiterClick(){if(!this._kategorie){ons.notification.toast("Kategorie ist erforderlich!",{timeout:2e3});return}if(!this._titel){ons.notification.toast("Titel ist erforderlich!",{timeout:2e3});return}if(!this._untertitel){ons.notification.toast("Untertitel ist erforderlich!",{timeout:2e3});return}if(!this._thumbnailSrc){ons.notification.toast("Thumbnail ist erforderlich!",{timeout:2e3});return}document.querySelector("ons-navigator").pushPage("add-item-1-page.html").then(x=>x.querySelector("add-item-1-page").setOnsListItemData({kategorie:this._kategorie,titel:this._titel,untertitel:this._untertitel,thumbnailSrc:this._thumbnailSrc,thumbnail_fileName:this._thumbnail_fileName}))}_onBildAuswaelenClick(){this.querySelector("file-input").openFileDialog()}_onThumbnailFileInputChange(event){this._thumbnailSrc=event.detail.fileDataUrl;this._thumbnail_fileName=event.detail.fileName}}customElements.define(AddItemPage.is,AddItemPage);class ListItemConfigurator extends connect(store)(LitElement){static get is(){return"list-item-configurator"}static get properties(){return{_key:String,_left:String,_title:String,_subtitle:String,_right:String,_showDeleteButton:Boolean,// new
+        `}setItem(item,kategorie){this._item=item;this._kategorie=kategorie;this._titel=this._item.listItemData.titel;this._untertitel=this._item.listItemData.untertitel;this._thumbnailSrc=this._item.listItemData.thumbnailSrc}_onWeiterClick(){if(!this._kategorie){ons.notification.toast("Kategorie ist erforderlich!",{timeout:2e3});return}if(!this._titel){ons.notification.toast("Titel ist erforderlich!",{timeout:2e3});return}if(!this._untertitel){ons.notification.toast("Untertitel ist erforderlich!",{timeout:2e3});return}if(!this._thumbnailSrc){ons.notification.toast("Thumbnail ist erforderlich!",{timeout:2e3});return}document.querySelector("ons-navigator").pushPage("add-item-1-page.html").then(x=>x.querySelector("add-item-1-page").setOnsListItemData({kategorie:this._kategorie,titel:this._titel,untertitel:this._untertitel,thumbnailSrc:this._thumbnailSrc,thumbnail_fileName:this._thumbnail_fileName}))}_onBildAuswaelenClick(){this.querySelector("file-input").openFileDialog()}_onThumbnailFileInputChange(event){this._thumbnailSrc=event.detail.fileDataUrl;this._thumbnail_fileName=event.detail.fileName}_onEntfernenClick(){const database=firebase.database();ons.notification.confirm("Confirm!").then(x=>{if(1===x){let path="";switch(this._item.kategorie){case"freizeit":path="freizeitItems/";break;default:console.error("",this._item);break;}let itemRef=database.ref(path+this._item.key);itemRef.remove().then(()=>{document.querySelector("ons-navigator").resetToPage("kategorien-page.html")}).catch(console.error)}})}}customElements.define(AddItemPage.is,AddItemPage);class ListItemConfigurator extends connect(store)(LitElement){static get is(){return"list-item-configurator"}static get properties(){return{_key:String,_left:String,_title:String,_subtitle:String,_right:String,_showDeleteButton:Boolean,// new
 _onsListItemText:String,_vorlage:String,_urlKonfigTitel:String,_urlKonfigUrl:String,_onsListItem_standard_text:String,_onsListItem_expandable_text:String,_onsListItem_expandable_expandableText:String,_onsListItem_url_titel:String,_onsListitem_url_url:String,_onsListItem_vorschaubilderUndTitel_thumbnailSrc:String,_onsListItem_vorschaubilderUndTitel_titel:String,_onsListItem_vorschaubilderUndTitel_untertitel:String}}constructor(){super();this._key="";this._left="";this._title="";this._subtitle="";this._right="";this._showDeleteButton=!1;this._vorlage="Standard";this._onsListItemText="";this._urlKonfigTitel="";this._urlKonfigUrl="";this._onsListItem_standard_text="";this._onsListItem_expandable_text="";this._onsListItem_expandable_expandableText="";this._onsListItem_url_titel="";this._onsListitem_url_url="";this._onsListItem_vorschaubilderUndTitel_thumbnailSrc="https://via.placeholder.com/40x40";this._onsListItem_vorschaubilderUndTitel_titel="";this._onsListItem_vorschaubilderUndTitel_untertitel=""}_render_onsToolbar(){return html`
         <ons-toolbar>
             <div class="left">
@@ -1901,7 +1907,7 @@ _onsListItemText:String,_vorlage:String,_urlKonfigTitel:String,_urlKonfigUrl:Str
         `}_render_onsList_eintraege(){return html`
         <ons-list-title>Freizeit</ons-list-title>
         <ons-list>
-            ${Object.keys(this._freizeitItems).map(key=>{const item=this._freizeitItems[key],{titel,untertitel,thumbnailSrc}=item.listItemData;return render_appPreviewListItem({item:item,title:titel,subtitle:untertitel,thumbnailSrc:thumbnailSrc,onClick:()=>{}})})}
+            ${Object.keys(this._freizeitItems).map(key=>{const item={...this._freizeitItems[key],key:key,kategorie:"freizeit"},{titel,untertitel,thumbnailSrc}=item.listItemData;return render_appPreviewListItem({item:item,title:titel,subtitle:untertitel,thumbnailSrc:thumbnailSrc,onClick:this._on_appPreviewListItem_click})})}
         </ons-list>
         `}createRenderRoot(){return this}render(){return html`
         <ons-page>
@@ -1911,7 +1917,7 @@ _onsListItemText:String,_vorlage:String,_urlKonfigTitel:String,_urlKonfigUrl:Str
                 ${this._render_onsList_eintraege()}
             </div>
         </ons-page>
-        `}stateChanged(state){this._freizeitItems=state.app.freizeitItems}_onNeuerEintragClick(){document.querySelector("ons-navigator").pushPage("add-item-page.html")}}customElements.define(DataPage.is,DataPage);const renderKategorienPage=()=>html`
+        `}stateChanged(state){this._freizeitItems=state.app.freizeitItems}_on_appPreviewListItem_click(item){document.querySelector("ons-navigator").pushPage("add-item-page.html").then(x=>{const additemPage=x.querySelector("add-item-page");additemPage.setItem(item,"freizeit")})}_onNeuerEintragClick(){document.querySelector("ons-navigator").pushPage("add-item-page.html")}}customElements.define(DataPage.is,DataPage);const renderKategorienPage=()=>html`
 <template id="kategorien-page.html">
     <ons-page>
         <kategorien-page></kategorien-page>
@@ -1977,7 +1983,7 @@ _onsListItemText:String,_vorlage:String,_urlKonfigTitel:String,_urlKonfigUrl:Str
         <data-page></data-page>
     </ons-page>
 </template>
-`;let ulmAppState=void 0;if(localStorage){const item=localStorage.getItem("ulm-app-state");if(item)ulmAppState=JSON.parse(item)}const INITIAL_STATE=ulmAppState||{kategorie:"",freizeitItems:{},freizeitOnsListData:[],lieferdiensteOnsListData:[],kulturOnsListData:[],infosOnsListData:[],freizeitItem:{},lieferdiensteItem:{},kulturItem:{},infosItem:{}},app=(state=INITIAL_STATE,action)=>{switch(action.type){case SET_KATEGORIE:state={...state,kategorie:action.payload};break;case SET_FREIZEIT_ITEMS:state={...state,freizeitItems:action.payload};break;case SET_FREIZEIT_ITEM:state={...state,freizeitItem:action.payload};break;case SET_LIEFERDIENSTE_ITEM:state={...state,lieferdiensteItem:action.payload};break;case SET_KULTUR_ITEM:state={...state,kulturItem:action.payload};break;case ADD_FREIZEIT_ITEM:state={...state,freizeitOnsListData:[...state.freizeitOnsListData,action.payload]};break;default:break;}if(localStorage){localStorage.setItem("ulm-app-state",JSON.stringify(state))}return state};class WillkommenPage extends connect(store)(LitElement){static get is(){return"willkommen-page"}static get properties(){return{}}constructor(){super();var database=firebase.database(),freizeitItemsRef=database.ref("freizeitItems/");freizeitItemsRef.on("value",snapshot=>{store.dispatch(setFreizeitItems(snapshot.val()))})}createRenderRoot(){return this}render(){return html`
+`,INITIAL_STATE={kategorie:"",freizeitItems:{},freizeitOnsListData:[],lieferdiensteOnsListData:[],kulturOnsListData:[],infosOnsListData:[],freizeitItem:{},lieferdiensteItem:{},kulturItem:{},infosItem:{}},app=(state=INITIAL_STATE,action)=>{switch(action.type){case SET_KATEGORIE:state={...state,kategorie:action.payload};break;case SET_FREIZEIT_ITEMS:state={...state,freizeitItems:action.payload};break;case SET_FREIZEIT_ITEM:state={...state,freizeitItem:action.payload};break;case SET_LIEFERDIENSTE_ITEM:state={...state,lieferdiensteItem:action.payload};break;case SET_KULTUR_ITEM:state={...state,kulturItem:action.payload};break;case ADD_FREIZEIT_ITEM:state={...state,freizeitOnsListData:[...state.freizeitOnsListData,action.payload]};break;default:break;}return state};class WillkommenPage extends connect(store)(LitElement){static get is(){return"willkommen-page"}static get properties(){return{}}constructor(){super();var database=firebase.database(),freizeitItemsRef=database.ref("freizeitItems/");freizeitItemsRef.on("value",snapshot=>{store.dispatch(setFreizeitItems(snapshot.val()||{}))})}createRenderRoot(){return this}render(){return html`
         <ons-page>
             <div class="content">
                 <ons-card class="ul">

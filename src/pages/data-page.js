@@ -47,7 +47,11 @@ export default class DataPage extends connect(store)(LitElement) {
         <ons-list-title>Freizeit</ons-list-title>
         <ons-list>
             ${Object.keys(this._freizeitItems).map(key => {
-            const item = this._freizeitItems[key],
+            const item = {
+                ...this._freizeitItems[key],
+                key: key,
+                kategorie: 'freizeit'
+            },
                 {
                     titel,
                     untertitel,
@@ -58,7 +62,7 @@ export default class DataPage extends connect(store)(LitElement) {
                 title: titel,
                 subtitle: untertitel,
                 thumbnailSrc: thumbnailSrc,
-                onClick: () => {  },
+                onClick: this._on_appPreviewListItem_click,
             });
         })}
         </ons-list>
@@ -80,6 +84,15 @@ export default class DataPage extends connect(store)(LitElement) {
 
     stateChanged(state) {
         this._freizeitItems = state.app.freizeitItems;
+    }
+
+    _on_appPreviewListItem_click(item) {
+        document.querySelector('ons-navigator')
+            .pushPage('add-item-page.html')
+            .then(x => {
+                const additemPage = x.querySelector('add-item-page');
+                additemPage.setItem(item, 'freizeit');
+            });
     }
 
     _onNeuerEintragClick() {
