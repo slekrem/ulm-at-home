@@ -45,7 +45,7 @@ export default class Detail1Page extends connect(store)(LitElement) {
             titel: this._item.pageData.titel,
             titelbildSrc: this._item.pageData.titelbildSrc,
             beschreibung: this._item.pageData.beschreibung,
-            informationen: this._item.pageData.informationen
+            informationen: this._item.pageData.informationen || {}
         })}
             </div>
         </ons-page>

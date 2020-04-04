@@ -1609,7 +1609,7 @@ document.querySelector("ons-navigator").pushPage("detail-1-page.html")}}customEl
                 <div class="center">${this._item.title}</div>
             </ons-toolbar>
             <div class="content">
-                ${render_app_page_content({titel:this._item.pageData.titel,titelbildSrc:this._item.pageData.titelbildSrc,beschreibung:this._item.pageData.beschreibung,informationen:this._item.pageData.informationen})}
+                ${render_app_page_content({titel:this._item.pageData.titel,titelbildSrc:this._item.pageData.titelbildSrc,beschreibung:this._item.pageData.beschreibung,informationen:this._item.pageData.informationen||{}})}
             </div>
         </ons-page>
         `}stateChanged(state){switch(state.app.kategorie){case 0:this._item=state.app.freizeitItem;break;case 1:this._item=state.app.lieferdiensteItem;break;case 2:this._item=state.app.kulturItem;break;default:break;}}}customElements.define(Detail1Page.is,Detail1Page);class FileInput extends connect(store)(LitElement){static get is(){return"file-input"}static get properties(){return{fileDataUrl:{type:String/*reflect: true*/},fileName:String}}constructor(){super();this.fileName="";this.fileDataUrl=""}render(){return html`
