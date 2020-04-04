@@ -2,6 +2,8 @@ import { connect } from "pwa-helpers";
 import { store } from "../redux/store";
 import { LitElement, html } from "lit-element";
 
+import '../components/file-input';
+
 export default class AddItemPage extends connect(store)(LitElement) {
     static get is() { return 'add-item-page'; }
     static get properties() {
@@ -50,10 +52,6 @@ export default class AddItemPage extends connect(store)(LitElement) {
     }
 
     _render_onsList_stammdaten() {
-        const onBildAuswaelenClick = () => {
-
-        };
-
         return html`
         <ons-list-title>Stammdaten</ons-list-title>
         <ons-list>
@@ -91,6 +89,7 @@ export default class AddItemPage extends connect(store)(LitElement) {
             <ons-list-item>
                 <div class="center">Thumbnail</div>
                 <div class="right">
+                    <file-input @change="${this._onThumbnailFileInputChange}"></file-input>
                     <ons-button modifier="large--quiet" 
                         @click="${this._onBildAuswaelenClick}">Bild auswählen</ons-button>
                 </div>
@@ -118,7 +117,6 @@ export default class AddItemPage extends connect(store)(LitElement) {
 
     createRenderRoot() { return this; }
     render() {
-        console.log('render');
         return html`
         <ons-page>
             ${this._render_onsToolbar()}
@@ -162,31 +160,12 @@ export default class AddItemPage extends connect(store)(LitElement) {
     }
 
     _onBildAuswaelenClick() {
-        console.log('bild auswählen click');
-        const input = document.createElement('input'),
-            reader = new FileReader();
-        input.setAttribute('type', 'file');
-        input.setAttribute('accept', 'image/*');
-        input.onchange = (e) => {
-            console.log('on input change: files', e.srcElement.files);
-            const file = e.srcElement.files[0];
-            console.log('file', file);
-            if (!file) return;
-            reader.onload = (e) => {
-                console.log('e', e);
-                this._thumbnailSrc = e.target.result;
-                this._thumbnail_fileName = file.name;
-            };
-            reader.onerror = (error) => {
-                console.log('error', error);
-            };
-            reader.readAsDataURL(file);
-            console.log('readAsDataURL', file);
-            reader.readAsDataURL(file);
-        }
-        document.body.appendChild(input);
-        input.click();
-        console.log('bild auswählen click fertig');
+        this.querySelector('file-input').openFileDialog();
+    }
+
+    _onThumbnailFileInputChange(event) {
+        this._thumbnailSrc = event.detail.fileDataUrl;
+        this._thumbnail_fileName = event.detail.fileName
     }
 }
 customElements.define(AddItemPage.is, AddItemPage);

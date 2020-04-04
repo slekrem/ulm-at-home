@@ -9,7 +9,8 @@ import {
     render_onsListItem_url,
     render_onsListItem_vorschaubilderUndTitel
 } from "../ons-components/ons-components";
-import { addFreizeitItem } from "../redux/actions/app";
+
+import '../components/file-input';
 
 export default class AddItem_1_Page extends connect(store)(LitElement) {
     static get is() { return 'add-item-1-page'; }
@@ -67,31 +68,16 @@ export default class AddItem_1_Page extends connect(store)(LitElement) {
     }
 
     _render_onsList_stammdaten() {
-        const onBildAuswaelenClick = () => {
-            const input = document.createElement('input'),
-                reader = new FileReader();
-            input.setAttribute('type', 'file');
-            input.setAttribute('accept', 'image/*');
-            input.onchange = (e) => {
-                const file = e.srcElement.files[0];
-                if (!file) return;
-                reader.onload = (e) => {
-                    this._titleImage = e.target.result;
-                    this._titelbild_fileName = file.name;
-                };
-                reader.readAsDataURL(file);
-            }
-            input.click();
-        }
         return html`
         <ons-list-title>Stammdaten</ons-list-title>
         <ons-list>
             <ons-list-item>
                 <div class="center">Titelbild</div>
                 <div class="right">
+                    <file-input @change="${this._onTitelbildFileInputChange}"></file-input>
                     <ons-button
                         modifier="large--quiet"
-                        @click="${onBildAuswaelenClick}">Bild auswählen</ons-button>
+                        @click="${this._onTitelbildAuswaelenClick}">Bild auswählen</ons-button>
                 </div>
             </ons-list-item>
             <ons-list-item>
@@ -231,6 +217,15 @@ export default class AddItem_1_Page extends connect(store)(LitElement) {
         this._onsListItemData = data;
     }
 
+    _onTitelbildFileInputChange(event) {
+        this._titelbild_fileName = event.detail.fileName;
+        this._titleImage = event.detail.fileDataUrl;
+    }
+
+    _onTitelbildAuswaelenClick(event) {
+        this.querySelector('file-input').openFileDialog();
+    }
+
     _onInformationsEintragClick(item) {
         document.querySelector('ons-navigator')
             .pushPage('list-item-configurator.html')
@@ -339,74 +334,6 @@ export default class AddItem_1_Page extends connect(store)(LitElement) {
             onsModal = this.querySelector('ons-modal');
         listItemConfigurator.setItem(item, true);
         onsModal.show();
-    }
-
-    _upload_titelbild({
-        titelbild_fileName,
-        titelbild_dataUrl,
-        onDownloadURL
-    }) {
-        const storageRef = firebase.storage().ref(),
-            ref = storageRef.child('titelbilder/' + titelbild_fileName),
-            uploadTask = ref.putString(titelbild_dataUrl, 'data_url');
-        uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED,
-            (snapshot) => {
-                const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                switch (snapshot.state) {
-                    case firebase.storage.TaskState.PAUSED:
-                        break;
-                    case firebase.storage.TaskState.RUNNING:
-                        break;
-                    default:
-                        break;
-                }
-            }, (error) => {
-                console.error(error);
-                switch (error.code) {
-                    case 'storage/unauthorized':
-                        break;
-                    case 'storage/canceled':
-                        break;
-                    case 'storage/unknown':
-                        break;
-                }
-            }, () => uploadTask.snapshot.ref.getDownloadURL()
-                .then((downloadURL) => onDownloadURL(downloadURL))
-        );
-    }
-
-    _upload_thumbnail({
-        thumbnail_fileName,
-        thumbnail_dataUrl,
-        onDownloadURL
-    }) {
-        const storageRef = firebase.storage().ref(),
-            ref = storageRef.child('thumbnails/' + thumbnail_fileName),
-            uploadTask = ref.putString(thumbnail_dataUrl, 'data_url');
-        uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED,
-            (snapshot) => {
-                const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                switch (snapshot.state) {
-                    case firebase.storage.TaskState.PAUSED:
-                        break;
-                    case firebase.storage.TaskState.RUNNING:
-                        break;
-                    default:
-                        break;
-                }
-            }, (error) => {
-                console.error(error);
-                switch (error.code) {
-                    case 'storage/unauthorized':
-                        break;
-                    case 'storage/canceled':
-                        break;
-                    case 'storage/unknown':
-                        break;
-                }
-            }, () => uploadTask.snapshot.ref.getDownloadURL()
-                .then((downloadURL) => onDownloadURL(downloadURL))
-        );
     }
 
     _upload_file({
