@@ -1880,7 +1880,7 @@ _onsListItemText:String,_vorlage:String,_urlKonfigTitel:String,_urlKonfigUrl:Str
         <ons-page>
             export page
         </ons-page>
-        `}}customElements.define(ItemExportPage.is,ItemExportPage);class DataPage extends connect(store)(LitElement){static get is(){return"data-page"}static get properties(){return{_freizeitOnsListData:Array}}constructor(){super();this._freizeitOnsListData=[]}_render_onsToolbar(){return html`
+        `}}customElements.define(ItemExportPage.is,ItemExportPage);class DataPage extends connect(store)(LitElement){static get is(){return"data-page"}static get properties(){return{_freizeitItems:Array}}constructor(){super();this._freizeitItems=[]}_render_onsToolbar(){return html`
         <ons-toolbar>
             <div class="left">
                 <ons-back-button>Zurück</ons-back-button>
@@ -1899,9 +1899,9 @@ _onsListItemText:String,_vorlage:String,_urlKonfigTitel:String,_urlKonfigUrl:Str
             </p>
         </ons-card>
         `}_render_onsList_eintraege(){return html`
-        <ons-list-title>Einträge</ons-list-title>
+        <ons-list-title>Freizeit</ons-list-title>
         <ons-list>
-            ${this._freizeitOnsListData.map(item=>render_appPreviewListItem({item:item,thumbnailSrc:item.thumbnailSrc,subtitle:item.subtitle,title:item.title,onClick:()=>{}}))}
+            ${Object.keys(this._freizeitItems).map(key=>{const item=this._freizeitItems[key],{titel,untertitel,thumbnailSrc}=item.listItemData;return render_appPreviewListItem({item:item,title:titel,subtitle:untertitel,thumbnailSrc:thumbnailSrc,onClick:()=>{}})})}
         </ons-list>
         `}createRenderRoot(){return this}render(){return html`
         <ons-page>
@@ -1911,7 +1911,7 @@ _onsListItemText:String,_vorlage:String,_urlKonfigTitel:String,_urlKonfigUrl:Str
                 ${this._render_onsList_eintraege()}
             </div>
         </ons-page>
-        `}stateChanged(state){this._freizeitOnsListData=state.app.freizeitOnsListData}_onNeuerEintragClick(){document.querySelector("ons-navigator").pushPage("add-item-page.html")}}customElements.define(DataPage.is,DataPage);const renderKategorienPage=()=>html`
+        `}stateChanged(state){this._freizeitItems=state.app.freizeitItems}_onNeuerEintragClick(){document.querySelector("ons-navigator").pushPage("add-item-page.html")}}customElements.define(DataPage.is,DataPage);const renderKategorienPage=()=>html`
 <template id="kategorien-page.html">
     <ons-page>
         <kategorien-page></kategorien-page>

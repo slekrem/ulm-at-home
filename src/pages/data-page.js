@@ -7,13 +7,13 @@ export default class DataPage extends connect(store)(LitElement) {
     static get is() { return 'data-page'; }
     static get properties() {
         return {
-            _freizeitOnsListData: Array
+            _freizeitItems: Array
         };
     }
 
     constructor() {
         super();
-        this._freizeitOnsListData = [];
+        this._freizeitItems = [];
     }
 
     _render_onsToolbar() {
@@ -44,16 +44,23 @@ export default class DataPage extends connect(store)(LitElement) {
 
     _render_onsList_eintraege() {
         return html`
-        <ons-list-title>Einträge</ons-list-title>
+        <ons-list-title>Freizeit</ons-list-title>
         <ons-list>
-            ${this._freizeitOnsListData.map(item =>
-            render_appPreviewListItem({
+            ${Object.keys(this._freizeitItems).map(key => {
+            const item = this._freizeitItems[key],
+                {
+                    titel,
+                    untertitel,
+                    thumbnailSrc,
+                } = item.listItemData;
+            return render_appPreviewListItem({
                 item: item,
-                thumbnailSrc: item.thumbnailSrc,
-                subtitle: item.subtitle,
-                title: item.title,
-                onClick: () => { },
-            }))}
+                title: titel,
+                subtitle: untertitel,
+                thumbnailSrc: thumbnailSrc,
+                onClick: () => {  },
+            });
+        })}
         </ons-list>
         `;
     }
@@ -72,7 +79,7 @@ export default class DataPage extends connect(store)(LitElement) {
     }
 
     stateChanged(state) {
-        this._freizeitOnsListData = state.app.freizeitOnsListData;
+        this._freizeitItems = state.app.freizeitItems;
     }
 
     _onNeuerEintragClick() {
