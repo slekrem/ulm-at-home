@@ -3,24 +3,27 @@ import {
     SET_KATEGORIE,
     SET_LIEFERDIENSTE_ITEM,
     SET_KULTUR_ITEM,
-    ADD_FREIZEIT_ITEM,
     SET_FREIZEIT_ITEMS,
-    SET_LIEFERDIENSTE_ITEMS
+    SET_LIEFERDIENSTE_ITEMS,
+    SET_KULTUR_ITEMS,
+    SET_INFO_ITEMS,
+    SET_INFO_ITEM
 } from "../actions/app";
 
 const INITIAL_STATE = {
     kategorie: '',
+
     freizeitItems: {},
-
-    freizeitOnsListData: [],
-    lieferdiensteItems: [],
-    kulturOnsListData: [],
-    infosOnsListData: [],
-
     freizeitItem: {},
+
+    lieferdiensteItems: {},
     lieferdiensteItem: {},
+
+    kulturItems: {},
     kulturItem: {},
-    infosItem: {}
+
+    infoItems: {},
+    infoItem: {},
 };
 
 const app = (state = INITIAL_STATE, action) => {
@@ -55,19 +58,28 @@ const app = (state = INITIAL_STATE, action) => {
                 lieferdiensteItem: action.payload
             };
             break;
+        case SET_KULTUR_ITEMS:
+            state = {
+                ...state,
+                kulturItems: action.payload
+            };
+            break;
         case SET_KULTUR_ITEM:
             state = {
                 ...state,
                 kulturItem: action.payload
             };
             break;
-        case ADD_FREIZEIT_ITEM:
+        case SET_INFO_ITEMS:
             state = {
                 ...state,
-                freizeitOnsListData: [
-                    ...state.freizeitOnsListData,
-                    action.payload
-                ]
+                infoItems: action.payload
+            };
+            break;
+        case SET_INFO_ITEM:
+            state = {
+                ...state,
+                infoItem: action.payload
             };
             break;
         default:

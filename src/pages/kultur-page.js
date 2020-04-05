@@ -2,32 +2,19 @@ import { connect } from "pwa-helpers";
 import { store } from "../redux/store";
 import { LitElement, html } from "lit-element";
 import { setKulturItem } from "../redux/actions/app";
+import { render_appPreviewListItem } from "../ons-components/app-components";
 
 export default class KulturPage extends connect(store)(LitElement) {
     static get is() { return 'kultur-page'; }
     static get properties() {
         return {
-            _kulturOnsListData: Object,
+            _kulturItems: Object,
         }
     }
 
     constructor() {
         super();
-        this._kulturOnsListData = [];
-    }
-
-    _renderOnsListItem(item) {
-        return html`
-            <ons-list-item modifier="chevron" tappable @click="${() => this._onOnsListItemClick(item)}">
-                <div class="left">
-                    <img class="list-item__thumbnail" src="${item.thumbnail}">
-                </div>
-                <div class="center">
-                    <span class="list-item__title">${item.title}</span>
-                    <span class="list-item__subtitle">${item.subtitle}</span>
-                </div>
-            </ons-list-item>
-            `;
+        this._kulturItems = {};
     }
 
     createRenderRoot() { return this; }
@@ -50,7 +37,22 @@ export default class KulturPage extends connect(store)(LitElement) {
                 </ons-card>
                 <ons-list-title>&nbsp;</ons-list-title>
                 <ons-list>
-                    ${this._kulturOnsListData.map(item => this._renderOnsListItem(item))}
+                ${Object.keys(this._kulturItems)
+                .map(key => {
+                    const item = {
+                        ...this._kulturItems[key],
+                        key: key,
+                        kategorie: 'kultur',
+                    };
+
+                    return render_appPreviewListItem({
+                        item: item,
+                        title: item.listItemData.titel,
+                        subtitle: item.listItemData.untertitel,
+                        thumbnailSrc: item.listItemData.thumbnailSrc,
+                        onClick: this._onOnsListItemClick
+                    })
+                })}
                 </ons-list>
             </div>
         </ons-page>
@@ -58,7 +60,7 @@ export default class KulturPage extends connect(store)(LitElement) {
     }
 
     stateChanged(state) {
-        this._kulturOnsListData = state.app.kulturOnsListData;
+        this._kulturItems = state.app.kulturItems;
     }
 
     _onOnsListItemClick(item) {

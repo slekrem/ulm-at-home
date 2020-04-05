@@ -8,7 +8,9 @@ export default class DataPage extends connect(store)(LitElement) {
     static get properties() {
         return {
             _freizeitItems: Object,
-            _lieferdiensteItems: Object
+            _lieferdiensteItems: Object,
+            _kulturItems: Object,
+            _infoItems: Object,
         };
     }
 
@@ -16,6 +18,8 @@ export default class DataPage extends connect(store)(LitElement) {
         super();
         this._freizeitItems = {};
         this._lieferdiensteItems = {};
+        this._kulturItems = {};
+        this._infoItems = {};
     }
 
     _render_onsToolbar() {
@@ -93,6 +97,54 @@ export default class DataPage extends connect(store)(LitElement) {
                     });
                 })}
         </ons-list>
+
+        <ons-list-title>Kultur</ons-list-title>
+        <ons-list>
+            ${Object.keys(this._kulturItems)
+                .map(key => {
+                    const item = {
+                        ...this._kulturItems[key],
+                        key: key,
+                        kategorie: 'kultur'
+                    },
+                        {
+                            titel,
+                            untertitel,
+                            thumbnailSrc,
+                        } = item.listItemData;
+                    return render_appPreviewListItem({
+                        item: item,
+                        title: titel,
+                        subtitle: untertitel,
+                        thumbnailSrc: thumbnailSrc,
+                        onClick: this._on_appPreviewListItem_click,
+                    });
+                })}
+        </ons-list>
+
+        <ons-list-title>Infos</ons-list-title>
+        <ons-list>
+            ${Object.keys(this._infoItems)
+                .map(key => {
+                    const item = {
+                        ...this._infoItems[key],
+                        key: key,
+                        kategorie: 'infos'
+                    },
+                        {
+                            titel,
+                            untertitel,
+                            thumbnailSrc,
+                        } = item.listItemData;
+                    return render_appPreviewListItem({
+                        item: item,
+                        title: titel,
+                        subtitle: untertitel,
+                        thumbnailSrc: thumbnailSrc,
+                        onClick: this._on_appPreviewListItem_click,
+                    });
+                })}
+        </ons-list>
         `;
     }
 
@@ -112,6 +164,8 @@ export default class DataPage extends connect(store)(LitElement) {
     stateChanged(state) {
         this._freizeitItems = state.app.freizeitItems;
         this._lieferdiensteItems = state.app.lieferdiensteItems;
+        this._kulturItems = state.app.kulturItems;
+        this._infoItems = state.app.infoItems;
     }
 
     _on_appPreviewListItem_click(item) {

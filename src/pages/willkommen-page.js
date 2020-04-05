@@ -2,7 +2,7 @@
 import { connect } from "pwa-helpers";
 import { store } from "../redux/store";
 import { LitElement, html } from "lit-element";
-import { setFreizeitItems, setLieferdiensteItems } from "../redux/actions/app";
+import { setFreizeitItems, setLieferdiensteItems, setKulturItems, setInfoItems } from "../redux/actions/app";
 
 export default class WillkommenPage extends connect(store)(LitElement) {
     static get is() { return 'willkommen-page'; }
@@ -12,13 +12,21 @@ export default class WillkommenPage extends connect(store)(LitElement) {
         super();
         const database = firebase.database(),
             freizeitItemsRef = database.ref('freizeitItems/'),
-            lieferdiensteItemsRef = database.ref('lieferdiensteItems/');
+            lieferdiensteItemsRef = database.ref('lieferdiensteItems/'),
+            kulturItemsRef = database.ref('kulturItems/'),
+            infoItemsRef = database.ref('infoItems/');
 
         freizeitItemsRef.on('value', (snapshot) => {
             store.dispatch(setFreizeitItems(snapshot.val() || {}))
         });
         lieferdiensteItemsRef.on('value', (snapshot) => {
             store.dispatch(setLieferdiensteItems(snapshot.val() || {}));
+        });
+        kulturItemsRef.on('value', (snapshot) => {
+            store.dispatch(setKulturItems(snapshot.val() || {}));
+        });
+        infoItemsRef.on('value', (snapshot) => {
+            store.dispatch(setInfoItems(snapshot.val() || {}));
         });
     }
 

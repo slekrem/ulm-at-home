@@ -1,18 +1,20 @@
 import { connect } from "pwa-helpers";
 import { store } from "../redux/store";
 import { LitElement, html } from "lit-element";
+import { render_appPreviewListItem } from "../ons-components/app-components";
+import { setInfoItem } from "../redux/actions/app";
 
 export default class InfosPage extends connect(store)(LitElement) {
     static get is() { return 'infos-page'; }
     static get properties() {
         return {
-            _infosOnsListData: Array
+            _infoItems: Object
         }
     }
 
     constructor() {
         super();
-        this._infosOnsListData = [];
+        this._infoItems = {};
     }
 
     _renderOnsListItem(item) {
@@ -45,7 +47,22 @@ export default class InfosPage extends connect(store)(LitElement) {
                 </ons-card>
                 <ons-list-title>&nbsp;</ons-list-title>
                 <ons-list>
-                    ${this._infosOnsListData.map(item => this._renderOnsListItem(item))}
+                    ${Object.keys(this._infoItems)
+                .map(key => {
+                    const item = {
+                        ...this._infoItems[key],
+                        key: key,
+                        kategorie: 'freizeit',
+                    };
+
+                    return render_appPreviewListItem({
+                        item: item,
+                        title: item.listItemData.titel,
+                        subtitle: item.listItemData.untertitel,
+                        thumbnailSrc: item.listItemData.thumbnailSrc,
+                        onClick: this._onOnsListItemClick
+                    })
+                })}
                 </ons-list>
             </div>
         </ons-page>
@@ -53,11 +70,11 @@ export default class InfosPage extends connect(store)(LitElement) {
     }
 
     stateChanged(state) {
-        this._infosOnsListData = state.app.infosOnsListData;
+        this._infoItems = state.app.infoItems;
     }
 
-    _onOnsListItemClick() {
-        //store.dispatch(setInfo(item));
+    _onOnsListItemClick(item) {
+        store.dispatch(setInfoItem(item));
         document.querySelector('ons-navigator')
             .pushPage('detail-1-page.html');
     }

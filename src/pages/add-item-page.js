@@ -208,6 +208,12 @@ export default class AddItemPage extends connect(store)(LitElement) {
                         case 'lieferdienste':
                             path = 'lieferdiensteItems/';
                             break;
+                        case 'kultur':
+                            path = 'kulturItems/';
+                            break;
+                        case 'infos':
+                            path = 'infoItems/';
+                            break;
                         default:
                             console.error('', this._item);
                             break;

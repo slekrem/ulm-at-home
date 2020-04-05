@@ -63,6 +63,9 @@ export default class Detail1Page extends connect(store)(LitElement) {
             case 2:
                 this._item = state.app.kulturItem;
                 break;
+            case 3:
+                this._item = state.app.infoItem;
+                break;
             default:
                 break;
         }

@@ -35,3 +35,19 @@ export const createLieferdiensteItem = (item) => new Promise((resolve, reject) =
         .then(resolve)
         .catch(reject);
 });
+
+export const createKulturItem = (item) => new Promise((resolve, reject) => {
+    const key = firebase.database().ref().child('kulturItems/').push().key;
+    firebase.database().ref(`kulturItems/${key}`)
+        .set(item)
+        .then(resolve)
+        .catch(reject);
+});
+
+export const createInfoItem = (item) => new Promise((resolve, reject) => {
+    const key = firebase.database().ref().child('infoItems/').push().key;
+    firebase.database().ref(`infoItems/${key}`)
+        .set(item)
+        .then(resolve)
+        .catch(reject);
+});

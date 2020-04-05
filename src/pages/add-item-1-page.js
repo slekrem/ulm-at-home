@@ -11,7 +11,7 @@ import {
 } from "../ons-components/ons-components";
 
 import '../components/file-input';
-import { uploadDataUrlAsync, createFreizeitItem, createLieferdiensteItem } from "../services/firebaseService";
+import { uploadDataUrlAsync, createFreizeitItem, createLieferdiensteItem, createKulturItem, createInfoItem } from "../services/firebaseService";
 
 export default class AddItem_1_Page extends connect(store)(LitElement) {
     static get is() { return 'add-item-1-page'; }
@@ -267,8 +267,6 @@ export default class AddItem_1_Page extends connect(store)(LitElement) {
 
     async _onFertigClick() {
         // TODO VALIDATION
-        console.log(this._onsListItemDatalieferdienste)
-
         const items = Object.keys(this._items)
             .map(key => this._items[key])
             .filter(y => y.vorlage === 'Vorschaubilder und Titel');
@@ -316,6 +314,20 @@ export default class AddItem_1_Page extends connect(store)(LitElement) {
                 break;
             case 'lieferdienste':
                 await createLieferdiensteItem(dataItem)
+                    .then(() => {
+                        document.querySelector('ons-navigator')
+                            .resetToPage('kategorien-page.html');
+                    });
+                break;
+            case 'kultur':
+                await createKulturItem(dataItem)
+                    .then(() => {
+                        document.querySelector('ons-navigator')
+                            .resetToPage('kategorien-page.html');
+                    });
+                break;
+            case 'infos':
+                await createInfoItem(dataItem)
                     .then(() => {
                         document.querySelector('ons-navigator')
                             .resetToPage('kategorien-page.html');
