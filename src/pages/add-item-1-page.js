@@ -11,6 +11,7 @@ import {
 } from "../ons-components/ons-components";
 
 import '../components/file-input';
+import { uploadDataUrlAsync, createFreizeitItem, createLieferdiensteItem } from "../services/firebaseService";
 
 export default class AddItem_1_Page extends connect(store)(LitElement) {
     static get is() { return 'add-item-1-page'; }
@@ -264,9 +265,40 @@ export default class AddItem_1_Page extends connect(store)(LitElement) {
             });
     }
 
-    _onFertigClick() {
-        const data = {
-            onsListItemData: this._onsListItemData,
+    async _onFertigClick() {
+        // TODO VALIDATION
+        console.log(this._onsListItemDatalieferdienste)
+
+        const items = Object.keys(this._items)
+            .map(key => this._items[key])
+            .filter(y => y.vorlage === 'Vorschaubilder und Titel');
+        for (let index = 0; index < items.length; ++index) {
+            const item = items[index];
+            await uploadDataUrlAsync({
+                child: 'testImages',
+                fileName: 'test.jpg',
+                dataUrl: item.thumbnailSrc,
+            }).then(downloadUrl => this._items[item.key].thumbnailSrc = downloadUrl);
+        }
+
+        await uploadDataUrlAsync({
+            child: 'titelbilder',
+            dataUrl: this._titleImage,
+            fileName: this._titelbild_fileName
+        }).then(downloadUrl => this._titleImage = downloadUrl);
+
+        await uploadDataUrlAsync({
+            child: 'thumbnails',
+            dataUrl: this._onsListItemData.thumbnailSrc,
+            fileName: this._onsListItemData.thumbnail_fileName
+        }).then(downloadUrl => this._onsListItemData.thumbnailSrc = downloadUrl);
+
+        const dataItem = {
+            listItemData: {
+                thumbnailSrc: this._onsListItemData.thumbnailSrc,
+                titel: this._onsListItemData.titel,
+                untertitel: this._onsListItemData.untertitel
+            },
             pageData: {
                 titelbildSrc: this._titleImage,
                 titel: this._subtitle,
@@ -274,59 +306,24 @@ export default class AddItem_1_Page extends connect(store)(LitElement) {
                 informationen: this._items
             }
         };
-
-        let titelbildDwnloadUrl,
-            thumbnailDownloadUrl;
-
-        this._upload_file({
-            child: 'titelbilder/',
-            dataUrl: data.pageData.titelbildSrc,
-            fileName: this._titelbild_fileName,
-            onProgress: (progress) => { },
-            onError: (error) => console.error(error),
-            onDownloadURL: (x) => {
-                titelbildDwnloadUrl = x;
-                this._upload_file({
-                    child: 'thumbnails/',
-                    dataUrl: data.onsListItemData.thumbnailSrc,
-                    fileName: data.onsListItemData.thumbnail_fileName,
-                    onProgress: (progress) => { },
-                    onError: (error) => { },
-                    onDownloadURL: (y) => {
-                        thumbnailDownloadUrl = y;
-                        let kategorieChild = 'unknownItems';
-                        switch (data.onsListItemData.kategorie) {
-                            case 'freizeit':
-                                kategorieChild = 'freizeitItems';
-                                break;
-                            default:
-                                break;
-                        }
-
-                        const key = firebase.database().ref().child(kategorieChild).push().key;
-                        firebase.database().ref(kategorieChild + '/' + key)
-                            .set({
-                                listItemData: {
-                                    thumbnailSrc: thumbnailDownloadUrl,
-                                    titel: data.onsListItemData.titel,
-                                    untertitel: data.onsListItemData.untertitel
-                                },
-                                pageData: {
-                                    titelbildSrc: titelbildDwnloadUrl,
-                                    titel: data.pageData.titel,
-                                    beschreibung: data.pageData.beschreibung,
-                                    informationen: data.pageData.informationen
-                                }
-                            })
-                            .then(x => {
-                                document.querySelector('ons-navigator')
-                                    .resetToPage('kategorien-page.html');
-                            })
-                            .catch(y => { });
-                    }
-                });
-            }
-        });
+        switch (this._onsListItemData.kategorie) {
+            case 'freizeit':
+                await createFreizeitItem(dataItem)
+                    .then(() => {
+                        document.querySelector('ons-navigator')
+                            .resetToPage('kategorien-page.html');
+                    });
+                break;
+            case 'lieferdienste':
+                await createLieferdiensteItem(dataItem)
+                    .then(() => {
+                        document.querySelector('ons-navigator')
+                            .resetToPage('kategorien-page.html');
+                    });
+                break;
+            default:
+                break;
+        }
     }
 
     _onOnsListItemClick(item) {
@@ -354,7 +351,6 @@ export default class AddItem_1_Page extends connect(store)(LitElement) {
             storageRef = firebase.storage().ref(),
             ref = storageRef.child(`${child}${uuidv4()}-${fileName}`),
             uploadTask = ref.putString(dataUrl, 'data_url');
-
         uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED,
             (snapshot) => { if (onProgress) onProgress((snapshot.bytesTransferred / snapshot.totalBytes) * 100); },
             (error) => { if (onError) onError(error); },
@@ -362,11 +358,56 @@ export default class AddItem_1_Page extends connect(store)(LitElement) {
         );
     }
 
+    _upload_file_async({
+        child,
+        fileName,
+        dataUrl,
+    }) {
+        const uuidv4 = () => {
+            return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'
+                .replace(/[xy]/g, (c) => {
+                    var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+                    return v.toString(16);
+                });
+        },
+            storageRef = firebase.storage().ref(),
+            ref = storageRef.child(`${child}${uuidv4()}-${fileName}`),
+            uploadTask = ref.putString(dataUrl, 'data_url');
+
+        return new Promise((resolve, reject) => {
+            uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED,
+                (snapshot) => { },
+                (error) => reject(error),
+                () => uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => resolve(downloadURL))
+            );
+        });
+
+
+    }
+
     _uuidv4() {
         return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
             var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
             return v.toString(16);
         });
+    }
+
+    async _uploadOnsListItemThumbnails() {
+        const items = Object.keys(this._items)
+            .map(key => this._items[key])
+            .filter(y => y.vorlage === 'Vorschaubilder und Titel');
+
+        for (let i = 0; i < items.length; ++i) {
+            const item = items[i];
+            await this._upload_file_async({
+                child: 'testImages/',
+                fileName: 'test.jpg',
+                dataUrl: item.thumbnailSrc,
+            }).then(downloadURL => {
+                this._items[item.key].thumbnailSrc = downloadURL
+            })
+                .catch(error => console.error(error));
+        }
     }
 }
 customElements.define(AddItem_1_Page.is, AddItem_1_Page);

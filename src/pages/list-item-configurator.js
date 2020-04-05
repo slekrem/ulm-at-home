@@ -139,7 +139,9 @@ export default class ListItemConfigurator extends connect(store)(LitElement) {
                 });
             case 'Vorschaubilder und Titel':
                 return render_onsListItem_vorschaubilderUndTitel_konfig({
-                    thumbnailChange: value => this._onsListItem_vorschaubilderUndTitel_thumbnailSrc = value,
+                    thumbnailChange: value => {
+                        this._onsListItem_vorschaubilderUndTitel_thumbnailSrc = value;
+                    },
                     titel: this._onsListItem_vorschaubilderUndTitel_titel,
                     titelChange: value => this._onsListItem_vorschaubilderUndTitel_titel = value,
                     untertitel: this._onsListItem_vorschaubilderUndTitel_untertitel,

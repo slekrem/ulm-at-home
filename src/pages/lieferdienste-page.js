@@ -2,32 +2,19 @@ import { connect } from "pwa-helpers";
 import { store } from "../redux/store";
 import { LitElement, html } from "lit-element";
 import { setLieferdiensteItem } from "../redux/actions/app";
+import { render_appPreviewListItem } from "../ons-components/app-components";
 
 export default class LieferdienstePage extends connect(store)(LitElement) {
     static get is() { return 'lieferdienste-page'; }
     static get properties() {
         return {
-            _lieferdiensteOnsListData: Array
+            _lieferdiensteItems: Object
         };
     }
 
     constructor() {
         super();
-        this._lieferdiensteOnsListData = [];
-    }
-
-    _renderOnsListItem(item) {
-        return html`
-            <ons-list-item modifier="chevron" tappable @click="${() => this._onOnsListItemClick(item)}">
-                <div class="left">
-                    <img class="list-item__thumbnail" src="${item.thumbnail}">
-                </div>
-                    <div class="center">
-                        <span class="list-item__title">${item.title}</span>
-                        <span class="list-item__subtitle">${item.subtitle}</span>
-                    </div>
-                </ons-list-item>
-                `;
+        this._lieferdiensteItems = {};
     }
 
     createRenderRoot() { return this; }
@@ -47,7 +34,22 @@ export default class LieferdienstePage extends connect(store)(LitElement) {
                 </ons-card>
                 <ons-list-title>&nbsp;</ons-list-title>
                 <ons-list>
-                    ${this._lieferdiensteOnsListData.map(item => this._renderOnsListItem(item))}
+                    ${Object.keys(this._lieferdiensteItems)
+                .map(key => {
+                    const item = {
+                        ...this._lieferdiensteItems[key],
+                        key: key,
+                        kategorie: 'lieferdienste'
+                    };
+
+                    return render_appPreviewListItem({
+                        item: item,
+                        title: item.listItemData.titel,
+                        subtitle: item.listItemData.untertitel,
+                        thumbnailSrc: item.listItemData.thumbnailSrc,
+                        onClick: this._onOnsListItemClick
+                    });
+                })}
                 </ons-list>
             </div>
         </ons-page>
@@ -55,7 +57,7 @@ export default class LieferdienstePage extends connect(store)(LitElement) {
     }
 
     stateChanged(state) {
-        this._lieferdiensteOnsListData = state.app.lieferdiensteOnsListData;
+        this._lieferdiensteItems = state.app.lieferdiensteItems;
     }
 
     _onOnsListItemClick(item) {

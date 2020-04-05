@@ -1,3 +1,9 @@
+export const SET_KATEGORIE = 'SET_KATEGORIE';
+export const setKategorie = (payload) => (dispatch) => dispatch({
+    type: SET_KATEGORIE,
+    payload: payload
+});
+
 export const SET_FREIZEIT_ITEMS = 'SET_FREIZEIT_ITEMS';
 export const setFreizeitItems = (payload) => (dispatch) => dispatch({
     type: SET_FREIZEIT_ITEMS,
@@ -10,9 +16,9 @@ export const setFreizeitItem = (payload) => (dispatch) => dispatch({
     payload: payload
 });
 
-export const SET_KATEGORIE = 'SET_KATEGORIE';
-export const setKategorie = (payload) => (dispatch) => dispatch({
-    type: SET_KATEGORIE,
+export const SET_LIEFERDIENSTE_ITEMS = 'SET_LIEFERDIENSTE_ITEMS';
+export const setLieferdiensteItems = (payload) => (dispatch) => dispatch({
+    type: SET_LIEFERDIENSTE_ITEMS,
     payload: payload
 });
 

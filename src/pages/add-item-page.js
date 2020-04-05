@@ -13,7 +13,10 @@ export default class AddItemPage extends connect(store)(LitElement) {
             _titel: String,
             _untertitel: String,
             _thumbnailSrc: String,
-            _thumbnail_fileName: String
+            _thumbnail_fileName: String,
+
+            _renderOnsBottomToolbar: Boolean,
+
         };
     }
 
@@ -25,6 +28,7 @@ export default class AddItemPage extends connect(store)(LitElement) {
         this._untertitel = '';
         this._thumbnailSrc = 'https://via.placeholder.com/40x40';
         this._thumbnail_fileName = '';
+        this._renderOnsBottomToolbar = false;
     }
 
     _render_onsToolbar() {
@@ -118,12 +122,14 @@ export default class AddItemPage extends connect(store)(LitElement) {
     }
 
     _render_onsBottomToolbar() {
-        return html`
+        if (this._renderOnsBottomToolbar)
+            return html`
         <ons-bottom-toolbar>
             <ons-button modifier="large--quiet"
                 @click="${this._onEntfernenClick}">Entfernen</ons-button>
         </ons-bottom-toolbar>
         `;
+        return html``;
     }
 
     createRenderRoot() { return this; }
@@ -147,6 +153,7 @@ export default class AddItemPage extends connect(store)(LitElement) {
         this._titel = this._item.listItemData.titel;
         this._untertitel = this._item.listItemData.untertitel;
         this._thumbnailSrc = this._item.listItemData.thumbnailSrc;
+        this._renderOnsBottomToolbar = true;
     }
 
     _onWeiterClick() {
@@ -197,6 +204,9 @@ export default class AddItemPage extends connect(store)(LitElement) {
                     switch (this._item.kategorie) {
                         case 'freizeit':
                             path = 'freizeitItems/';
+                            break;
+                        case 'lieferdienste':
+                            path = 'lieferdiensteItems/';
                             break;
                         default:
                             console.error('', this._item);

@@ -119,15 +119,22 @@ export const render_onsListItem_vorschaubilderUndTitel_konfig = ({
     const onOnsButtonClick = () => {
         const input = document.createElement('input'),
             reader = new FileReader();
-        input.setAttribute('hidden', true);
-        input.setAttribute('type', 'file');
-        input.setAttribute('accept', 'image/*');
-        input.onchange = (e) => {
+
+        input.addEventListener('change', e => {
             const file = e.srcElement.files[0];
             if (!file) return;
             reader.onload = (e) => thumbnailChange(e.target.result);
             reader.readAsDataURL(file);
-        }
+        });
+
+        // input.onchange = (e) => {
+
+        // }
+
+        input.setAttribute('hidden', true);
+        input.setAttribute('type', 'file');
+        input.setAttribute('accept', 'image/*');
+
         input.click();
     };
     return html`

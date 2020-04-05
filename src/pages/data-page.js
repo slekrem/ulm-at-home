@@ -7,13 +7,15 @@ export default class DataPage extends connect(store)(LitElement) {
     static get is() { return 'data-page'; }
     static get properties() {
         return {
-            _freizeitItems: Array
+            _freizeitItems: Object,
+            _lieferdiensteItems: Object
         };
     }
 
     constructor() {
         super();
-        this._freizeitItems = [];
+        this._freizeitItems = {};
+        this._lieferdiensteItems = {};
     }
 
     _render_onsToolbar() {
@@ -46,25 +48,50 @@ export default class DataPage extends connect(store)(LitElement) {
         return html`
         <ons-list-title>Freizeit</ons-list-title>
         <ons-list>
-            ${Object.keys(this._freizeitItems).map(key => {
-            const item = {
-                ...this._freizeitItems[key],
-                key: key,
-                kategorie: 'freizeit'
-            },
-                {
-                    titel,
-                    untertitel,
-                    thumbnailSrc,
-                } = item.listItemData;
-            return render_appPreviewListItem({
-                item: item,
-                title: titel,
-                subtitle: untertitel,
-                thumbnailSrc: thumbnailSrc,
-                onClick: this._on_appPreviewListItem_click,
-            });
-        })}
+            ${Object.keys(this._freizeitItems)
+                .map(key => {
+                    const item = {
+                        ...this._freizeitItems[key],
+                        key: key,
+                        kategorie: 'freizeit'
+                    },
+                        {
+                            titel,
+                            untertitel,
+                            thumbnailSrc,
+                        } = item.listItemData;
+                    return render_appPreviewListItem({
+                        item: item,
+                        title: titel,
+                        subtitle: untertitel,
+                        thumbnailSrc: thumbnailSrc,
+                        onClick: this._on_appPreviewListItem_click,
+                    });
+                })}
+        </ons-list>
+
+        <ons-list-title>Lieferdienste</ons-list-title>
+        <ons-list>
+            ${Object.keys(this._lieferdiensteItems)
+                .map(key => {
+                    const item = {
+                        ...this._lieferdiensteItems[key],
+                        key: key,
+                        kategorie: 'lieferdienste'
+                    },
+                        {
+                            titel,
+                            untertitel,
+                            thumbnailSrc,
+                        } = item.listItemData;
+                    return render_appPreviewListItem({
+                        item: item,
+                        title: titel,
+                        subtitle: untertitel,
+                        thumbnailSrc: thumbnailSrc,
+                        onClick: this._on_appPreviewListItem_click,
+                    });
+                })}
         </ons-list>
         `;
     }
@@ -84,6 +111,7 @@ export default class DataPage extends connect(store)(LitElement) {
 
     stateChanged(state) {
         this._freizeitItems = state.app.freizeitItems;
+        this._lieferdiensteItems = state.app.lieferdiensteItems;
     }
 
     _on_appPreviewListItem_click(item) {

@@ -4,7 +4,8 @@ import {
     SET_LIEFERDIENSTE_ITEM,
     SET_KULTUR_ITEM,
     ADD_FREIZEIT_ITEM,
-    SET_FREIZEIT_ITEMS
+    SET_FREIZEIT_ITEMS,
+    SET_LIEFERDIENSTE_ITEMS
 } from "../actions/app";
 
 const INITIAL_STATE = {
@@ -12,7 +13,7 @@ const INITIAL_STATE = {
     freizeitItems: {},
 
     freizeitOnsListData: [],
-    lieferdiensteOnsListData: [],
+    lieferdiensteItems: [],
     kulturOnsListData: [],
     infosOnsListData: [],
 
@@ -34,6 +35,12 @@ const app = (state = INITIAL_STATE, action) => {
             state = {
                 ...state,
                 freizeitItems: action.payload
+            };
+            break;
+        case SET_LIEFERDIENSTE_ITEMS:
+            state = {
+                ...state,
+                lieferdiensteItems: action.payload
             };
             break;
         case SET_FREIZEIT_ITEM:
