@@ -6,8 +6,9 @@ import {
     SET_FREIZEIT_ITEMS,
     SET_LIEFERDIENSTE_ITEMS,
     SET_KULTUR_ITEMS,
+    
     SET_INFO_ITEMS,
-    SET_INFO_ITEM
+    SET_INFO_ITEM,
 } from "../actions/app";
 
 const INITIAL_STATE = {

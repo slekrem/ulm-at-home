@@ -48,30 +48,32 @@ export default class DataPage extends connect(store)(LitElement) {
         `;
     }
 
-    _render_onsList_eintraege() {
+    _render_onsListItems(items, kategorie) {
         return html`
-        <ons-list-title>Freizeit</ons-list-title>
         <ons-list>
-            ${Object.keys(this._freizeitItems)
+            ${Object.keys(items)
                 .map(key => {
                     const item = {
-                        ...this._freizeitItems[key],
+                        ...items[key],
                         key: key,
-                        kategorie: 'freizeit'
-                    },
-                        {
-                            titel,
-                            untertitel,
-                            thumbnailSrc,
-                        } = item.listItemData;
+                        kategorie: kategorie
+                    };
                     return render_appPreviewListItem({
                         item: item,
-                        title: titel,
-                        subtitle: untertitel,
-                        thumbnailSrc: thumbnailSrc,
+                        title: item.listItemData.titel,
+                        subtitle: item.listItemData.untertitel,
+                        thumbnailSrc: item.listItemData.thumbnailSrc,
                         onClick: this._on_appPreviewListItem_click,
                     });
                 })}
+        </ons-list>`;
+    }
+
+    _render_onsList() {
+        return html`
+        <ons-list-title>Freizeit</ons-list-title>
+        <ons-list>
+            ${this._render_onsListItems(this._freizeitItems, 'freizeit')}
         </ons-list>
 
         <ons-list-title>Lieferdienste</ons-list-title>
@@ -155,7 +157,7 @@ export default class DataPage extends connect(store)(LitElement) {
             ${this._render_onsToolbar()}
             <div class="content">
                 ${this._render_onsCard()}
-                ${this._render_onsList_eintraege()}
+                ${this._render_onsList()}
             </div>
         </ons-page>
         `;

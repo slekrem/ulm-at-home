@@ -2,7 +2,6 @@ import { connect } from "pwa-helpers";
 import { store } from "../redux/store";
 import { LitElement, html } from "lit-element";
 
-import './list-item-configurator';
 import {
     render_onsListItem_standard,
     render_onsListItem_expandable,
@@ -10,8 +9,16 @@ import {
     render_onsListItem_vorschaubilderUndTitel
 } from "../ons-components/ons-components";
 
+import {
+    uploadDataUrlAsync,
+    createFreizeitItem,
+    createLieferdiensteItem,
+    createKulturItem,
+    createInfoItem
+} from "../services/firebaseService";
+
 import '../components/file-input';
-import { uploadDataUrlAsync, createFreizeitItem, createLieferdiensteItem, createKulturItem, createInfoItem } from "../services/firebaseService";
+import './list-item-configurator';
 
 export default class AddItem_1_Page extends connect(store)(LitElement) {
     static get is() { return 'add-item-1-page'; }
@@ -345,81 +352,11 @@ export default class AddItem_1_Page extends connect(store)(LitElement) {
         onsModal.show();
     }
 
-    _upload_file({
-        child,
-        fileName,
-        dataUrl,
-        onProgress,
-        onError,
-        onDownloadURL
-    }) {
-        const uuidv4 = () => {
-            return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'
-                .replace(/[xy]/g, (c) => {
-                    var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
-                    return v.toString(16);
-                });
-        },
-            storageRef = firebase.storage().ref(),
-            ref = storageRef.child(`${child}${uuidv4()}-${fileName}`),
-            uploadTask = ref.putString(dataUrl, 'data_url');
-        uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED,
-            (snapshot) => { if (onProgress) onProgress((snapshot.bytesTransferred / snapshot.totalBytes) * 100); },
-            (error) => { if (onError) onError(error); },
-            () => uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => { if (onDownloadURL) onDownloadURL(downloadURL); })
-        );
-    }
-
-    _upload_file_async({
-        child,
-        fileName,
-        dataUrl,
-    }) {
-        const uuidv4 = () => {
-            return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'
-                .replace(/[xy]/g, (c) => {
-                    var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
-                    return v.toString(16);
-                });
-        },
-            storageRef = firebase.storage().ref(),
-            ref = storageRef.child(`${child}${uuidv4()}-${fileName}`),
-            uploadTask = ref.putString(dataUrl, 'data_url');
-
-        return new Promise((resolve, reject) => {
-            uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED,
-                (snapshot) => { },
-                (error) => reject(error),
-                () => uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => resolve(downloadURL))
-            );
-        });
-
-
-    }
-
     _uuidv4() {
         return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
             var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
             return v.toString(16);
         });
-    }
-
-    async _uploadOnsListItemThumbnails() {
-        const items = Object.keys(this._items)
-            .map(key => this._items[key])
-            .filter(y => y.vorlage === 'Vorschaubilder und Titel');
-
-        for (let i = 0; i < items.length; ++i) {
-            const item = items[i];
-            await this._upload_file_async({
-                child: 'testImages/',
-                fileName: 'test.jpg',
-                dataUrl: item.thumbnailSrc,
-            }).then(downloadURL => {
-                this._items[item.key].thumbnailSrc = downloadURL
-            })
-                .catch(error => console.error(error));
-        }
     }
 }
 customElements.define(AddItem_1_Page.is, AddItem_1_Page);

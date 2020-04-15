@@ -51,3 +51,9 @@ export const createInfoItem = (item) => new Promise((resolve, reject) => {
         .then(resolve)
         .catch(reject);
 });
+
+export const updatePostitem = ({ child, key, item }) => new Promise((resolve, reject) =>
+    firebase.database().ref(`${child}/${key}`)
+        .update(item)
+        .then(x => resolve(x))
+        .catch(x => reject(x)));

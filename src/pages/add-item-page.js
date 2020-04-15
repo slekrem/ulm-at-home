@@ -57,23 +57,33 @@ export default class AddItemPage extends connect(store)(LitElement) {
         `;
     }
 
-    _render_onsList_stammdaten() {
+    _render_onsListItem_stammdatenKategorie() {
+        const disabled = this._renderOnsBottomToolbar;
+        console.log(this._item)
         return html`
-        <ons-list-title>Stammdaten</ons-list-title>
-        <ons-list>
-            <ons-list-item>
-                <div class="center">Kategorie</div>
+        <ons-list-item>
+            <div class="center">Kategorie</div>
                 <div class="right">
                     <ons-select class="ul" 
+                        ?disabled="${disabled}"
                         value="${this._kategorie}"
                         @change="${e => this._kategorie = e.srcElement.value}">
                         <option value="freizeit">Freizeit</option>
-                        <option value="lieferdienste">Lieferdienste</option>
+                        <option value="lieferdienste" selected>Lieferdienste</option>
                         <option value="kultur">Kultur</option>
                         <option value="infos">Infos</option>
                     </ons-select>
                 </div>
-            </ons-list-item>
+            </div>
+        </ons-list-item>
+        `;
+    }
+
+    _render_onsList_stammdaten() {
+        return html`
+        <ons-list-title>Stammdaten</ons-list-title>
+        <ons-list>
+            ${this._render_onsListItem_stammdatenKategorie()}
             <ons-list-item>
                 <div class="center">Titel</div>
                 <div class="right">
